@@ -1,51 +1,34 @@
 'use server';
 
-import { createClient } from '@/lib/supabase/client';
+import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 
-export async function signIn(formData: FormData) {
-  const email = formData.get('email');
-  const password = formData.get('password');
+export async function signIn(
+  email: string,
+  password: string,
+): Promise<{ error: string } | null> {
+  const supabase = await createClient();
 
-  if (typeof email != 'string' || typeof password != 'string') return;
-
-  const supabase = createClient();
-
-  const { error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
-  if (error) throw new Error('Wrong credentials try again');
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) return { error: 'Wrong credentials, try again.' };
 
   redirect('/dashboard');
 }
 
-export async function signUp(formData: FormData) {
-  const email = formData.get('email');
-  const password = formData.get('password');
-  const username = formData.get('username');
-
-  if (
-    typeof email != 'string' ||
-    typeof password != 'string' ||
-    typeof username != 'string'
-  ) {
-    throw new Error('Invalid form data');
-  }
-
-  const supabase = createClient();
+export async function signUp(
+  email: string,
+  password: string,
+  username: string,
+): Promise<{ error: string } | null> {
+  const supabase = await createClient();
 
   const { error } = await supabase.auth.signUp({
     email,
     password,
-    options: {
-      data: {
-        username,
-      },
-    },
+    options: { data: { username } },
   });
 
-  if (error) throw new Error(error.message);
+  if (error) return { error: error.message };
 
   redirect('/dashboard');
 }
