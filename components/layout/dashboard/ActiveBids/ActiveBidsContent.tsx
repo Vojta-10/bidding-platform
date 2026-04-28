@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Fragment } from 'react';
 import Link from 'next/link';
 import { Gavel } from 'lucide-react';
 import { CardContent, CardHeader } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
-import { BidsCarousel } from './BidsCarousel';
-import type { BidCardData } from './BidCard';
+import { FilterChip } from '../Chip';
+import { BidsCarousel } from '../BidsCarousel';
+import type { BidCardData } from '../BidCard';
 
 type Filter = 'all' | 'outbid' | 'ending-soon';
 
@@ -35,63 +35,60 @@ export function ActiveBidsContent({ bids }: ActiveBidsContentProps) {
     return true;
   });
 
-  const chips: { id: Filter; label: string; count: number; bgColor: string }[] =
-    [
-      {
-        id: 'all',
-        label: 'All',
-        count: bids.length,
-        bgColor: 'bg-primary text-background',
-      },
-      {
-        id: 'outbid',
-        label: 'Outbid',
-        count: outbidCount,
-        bgColor: 'bg-destructive/15 text-destructive',
-      },
-      {
-        id: 'ending-soon',
-        label: 'Ending soon',
-        count: endingSoonCount,
-        bgColor: 'bg-amber-500/15 text-amber-700 dark:text-amber-400',
-      },
-    ];
+  const chips: {
+    id: Filter;
+    label: string;
+    count: number;
+    bgColor: string;
+    dotColor?: string;
+  }[] = [
+    {
+      id: 'all',
+      label: 'All',
+      count: bids.length,
+      bgColor: 'bg-primary text-background',
+    },
+    {
+      id: 'outbid',
+      label: 'Outbid',
+      count: outbidCount,
+      bgColor: 'bg-destructive/15 text-destructive',
+      dotColor: 'bg-destructive',
+    },
+    {
+      id: 'ending-soon',
+      label: 'Ending soon',
+      count: endingSoonCount,
+      bgColor: 'bg-amber-500/15 text-amber-700 dark:text-amber-400',
+      dotColor: 'bg-amber-500',
+    },
+  ];
 
   return (
     <>
       <CardHeader>
-        <div className='flex items-center gap-2'>
-          <h2 className='font-heading text-xl font-semibold mr-2'>
+        <div className='flex flex-col gap-2 px-2 sm:flex-row sm:items-center'>
+          <h2 className='font-heading text-2xl font-semibold mr-2'>
             Active Bids
           </h2>
-          <div className='flex items-center gap-2.5'>
-            {chips.map(({ id, label, count, bgColor }) => (
-              <button
-                key={id}
-                onClick={() => setFilter(id)}
-                className={cn(
-                  'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors',
-                  filter === id
-                    ? bgColor
-                    : 'bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground',
+          <div className='flex flex-wrap items-center gap-2'>
+            {chips.map(({ id, label, count, bgColor, dotColor }) => (
+              <Fragment key={id}>
+                {id === 'ending-soon' && (
+                  <span
+                    className='hidden max-[460px]:block max-[460px]:w-full'
+                    aria-hidden
+                  />
                 )}
-              >
-                {id === 'outbid' && filter === id && (
-                  <span className='size-1.5 rounded-full bg-destructive' />
-                )}
-                {id === 'ending-soon' && filter === id && (
-                  <span className='size-1.5 rounded-full bg-amber-500' />
-                )}
-                {label}
-                <span
-                  className={cn(
-                    'rounded-full px-1 tabular-nums',
-                    filter === id ? 'opacity-75' : 'opacity-60',
-                  )}
-                >
-                  {count}
-                </span>
-              </button>
+                <FilterChip
+                  label={label}
+                  count={count}
+                  isActive={filter === id}
+                  activeColor={bgColor}
+                  dotColor={dotColor}
+                  onClick={() => setFilter(id)}
+                />
+              </Fragment>
             ))}
           </div>
         </div>

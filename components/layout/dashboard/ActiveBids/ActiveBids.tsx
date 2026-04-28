@@ -1,6 +1,6 @@
 import { Card } from '@/components/ui/card';
 import { ActiveBidsContent } from './ActiveBidsContent';
-import type { BidCardData } from './BidCard';
+import type { BidCardData } from '../BidCard';
 
 // Replace with real data: query bids joined with auctions where bidder_id = user.id and status = 'active'
 const MOCK_BIDS: BidCardData[] = [
@@ -98,7 +98,7 @@ const MOCK_BIDS: BidCardData[] = [
 
 export default function ActiveBids() {
   return (
-    <Card className='mt-4'>
+    <Card className='mt-12'>
       <ActiveBidsContent bids={MOCK_BIDS} />
     </Card>
   );

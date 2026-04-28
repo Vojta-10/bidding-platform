@@ -33,10 +33,11 @@ export function BidsCarousel({ bids }: { bids: BidCardData[] }) {
   }, [bids, sync]);
 
   const scroll = (dir: 'left' | 'right') => {
-    scrollRef.current?.scrollBy({
-      left: dir === 'right' ? SCROLL_STEP : -SCROLL_STEP,
-      behavior: 'smooth',
-    });
+    const el = scrollRef.current;
+    if (!el) return;
+    const firstCard = el.firstElementChild as HTMLElement | null;
+    const step = firstCard ? firstCard.offsetWidth + 16 : SCROLL_STEP;
+    el.scrollBy({ left: dir === 'right' ? step : -step, behavior: 'smooth' });
   };
 
   const showProgress = canScrollLeft || canScrollRight;
@@ -44,21 +45,19 @@ export function BidsCarousel({ bids }: { bids: BidCardData[] }) {
   return (
     <div className='flex flex-col gap-3'>
       <div className='relative'>
-        {/* Edge fades */}
         <div
           className={cn(
-            'pointer-events-none absolute left-0 top-0 z-10 h-full w-8 sm:w-16 bg-linear-to-r from-card to-transparent transition-opacity duration-200',
+            'pointer-events-none absolute left-0 top-0 z-10 h-full w-5 sm:w-10 bg-linear-to-r from-card to-transparent transition-opacity duration-200',
             canScrollLeft ? 'opacity-100' : 'opacity-0',
           )}
         />
         <div
           className={cn(
-            'pointer-events-none absolute right-0 top-0 z-10 h-full w-8 sm:w-16 bg-linear-to-l from-card to-transparent transition-opacity duration-200',
+            'pointer-events-none absolute right-0 top-0 z-10 h-full w-5 sm:w-10 bg-linear-to-l from-card to-transparent transition-opacity duration-200',
             canScrollRight ? 'opacity-100' : 'opacity-0',
           )}
         />
 
-        {/* Nav arrows */}
         <button
           onClick={() => scroll('left')}
           disabled={!canScrollLeft}
@@ -86,11 +85,10 @@ export function BidsCarousel({ bids }: { bids: BidCardData[] }) {
           <ChevronRight className='size-4' />
         </button>
 
-        {/* Scroll container */}
         <div
           ref={scrollRef}
           onScroll={sync}
-          className='flex gap-4 pb-2 px-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'
+          className='flex gap-4 overflow-x-auto px-2 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'
         >
           {bids.map((bid) => (
             <BidCard key={bid.id} bid={bid} />
@@ -98,7 +96,6 @@ export function BidsCarousel({ bids }: { bids: BidCardData[] }) {
         </div>
       </div>
 
-      {/* Scroll progress bar */}
       <div
         className={cn(
           'h-px w-full rounded-full bg-border transition-opacity duration-300',

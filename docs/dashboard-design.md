@@ -19,21 +19,24 @@
 ## Dashboard Page `/dashboard`
 
 ### 1. Stats Strip
+
 Four cards across the top, full width:
 
-| Card | Value |
-|---|---|
-| Active Bids | number of auctions user is currently bidding on |
-| Auctions Won | total wins |
-| My Listings | number of user's active listings |
-| Total Spent | sum of winning bids |
+| Card         | Value                                           |
+| ------------ | ----------------------------------------------- |
+| Active Bids  | number of auctions user is currently bidding on |
+| Auctions Won | total wins                                      |
+| My Listings  | number of user's active listings                |
+| Total Spent  | sum of winning bids                             |
 
 ---
 
 ### 2. Active Bids _(priority section, full width)_
+
 Horizontally scrollable row of auction cards — auctions the user has placed a bid on and are still running.
 
 Each card shows:
+
 - Auction image
 - Title
 - Countdown timer (pulses red when < 1 hour)
@@ -50,6 +53,7 @@ Auctions the user has saved/watched but not yet bid on. Same card format as Acti
 
 **Right (narrower) — Recent Activity**
 Timestamped feed of bid events:
+
 - You placed a bid on X — $200
 - You were outbid on X
 - You won X
@@ -58,15 +62,16 @@ Timestamped feed of bid events:
 ---
 
 ### 4. My Listings _(below, collapsible)_
+
 Table view of the user's created auctions:
 
-| Column | Notes |
-|---|---|
-| Title | links to auction detail |
-| Status | `Active` (green) / `Ended` (muted) / `Draft` (amber) |
-| Current Price | — |
-| Bids | count |
-| Time Left | countdown or "Ended" |
+| Column        | Notes                                                |
+| ------------- | ---------------------------------------------------- |
+| Title         | links to auction detail                              |
+| Status        | `Active` (green) / `Ended` (muted) / `Draft` (amber) |
+| Current Price | —                                                    |
+| Bids          | count                                                |
+| Time Left     | countdown or "Ended"                                 |
 
 ---
 
@@ -74,5 +79,5 @@ Table view of the user's created auctions:
 
 - **Urgency states**: Outbid cards and countdowns under 1h use red/amber with a subtle pulse animation
 - **No sidebar anywhere** — sub-pages (My Listings, Settings) use a tab strip under the navbar
-- **Mobile**: navbar collapses to hamburger, stats stack 2×2, bid cards go full width
+- **Mobile**: navbar collapses to hamburger, stats stack 1x4, bid cards go full width
 - **Empty states**: each section has a meaningful empty state (e.g. "No active bids — Browse auctions →")

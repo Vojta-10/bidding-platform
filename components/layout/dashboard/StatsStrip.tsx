@@ -44,21 +44,21 @@ const stats = [
 
 export default function StatsStrip() {
   return (
-    <div className='grid grid-cols-2 gap-4 lg:grid-cols-4'>
+    <div className='grid grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-4'>
       {stats.map(({ label, value, sub, Icon, iconBg, iconColor }) => (
         <Card key={label}>
           <CardHeader>
-            <CardTitle className='text-xl font-medium text-muted-foreground'>
+            <CardTitle className='text-sm font-medium text-muted-foreground sm:text-base'>
               {label}
             </CardTitle>
             <CardAction>
-              <div className={`rounded-lg p-2 ${iconBg}`}>
-                <Icon className={`size-4 ${iconColor}`} />
+              <div className={`rounded-lg p-1.5 sm:p-2 ${iconBg}`}>
+                <Icon className={`size-3.5 sm:size-4 ${iconColor}`} />
               </div>
             </CardAction>
           </CardHeader>
           <CardContent>
-            <p className='text-3xl font-bold tracking-tight'>{value}</p>
+            <p className='text-xl font-bold tracking-tight sm:text-2xl lg:text-3xl'>{value}</p>
             <p className='mt-1 text-xs text-muted-foreground'>{sub}</p>
           </CardContent>
         </Card>

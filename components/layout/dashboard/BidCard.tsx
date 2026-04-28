@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Clock, TrendingUp } from 'lucide-react';
+import { Clock, TrendingUp, Gavel } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { buttonVariants } from '@/components/ui/button';
 import { cn, formatCurrency } from '@/lib/utils';
@@ -12,9 +12,9 @@ export interface BidCardData {
   title: string;
   imageGradient: string;
   currentPrice: number;
-  yourBid: number;
+  yourBid?: number;
   deadline: string;
-  status: 'winning' | 'outbid';
+  status?: 'winning' | 'outbid';
 }
 
 function calcTimeLeft(deadline: string) {
@@ -39,10 +39,7 @@ export function BidCard({ bid }: { bid: BidCardData }) {
   const [timeLeft, setTimeLeft] = useState(() => calcTimeLeft(bid.deadline));
 
   useEffect(() => {
-    const id = setInterval(
-      () => setTimeLeft(calcTimeLeft(bid.deadline)),
-      1000,
-    );
+    const id = setInterval(() => setTimeLeft(calcTimeLeft(bid.deadline)), 1000);
     return () => clearInterval(id);
   }, [bid.deadline]);
 
@@ -51,12 +48,11 @@ export function BidCard({ bid }: { bid: BidCardData }) {
   return (
     <Card
       className={cn(
-        'w-64 shrink-0 gap-0 overflow-hidden py-0 transition-all hover:shadow-md',
+        'w-52 shrink-0 gap-0 overflow-hidden py-0 transition-all hover:shadow-md sm:w-64',
         urgent && 'ring-destructive/50',
       )}
     >
-      {/* Image */}
-      <div className={cn('relative h-44 w-full', bid.imageGradient)}>
+      <div className={cn('relative h-36 w-full sm:h-44', bid.imageGradient)}>
         {urgent && (
           <div className='absolute left-2.5 top-2.5 flex items-center gap-1.5 rounded-full bg-black/50 px-2 py-1 backdrop-blur-sm'>
             <span className='relative flex size-2 shrink-0'>
@@ -70,17 +66,15 @@ export function BidCard({ bid }: { bid: BidCardData }) {
         )}
       </div>
 
-      <CardContent className='flex flex-col gap-3 p-3'>
-        {/* Title */}
+      <CardContent className='flex flex-col gap-2 p-2.5 sm:gap-3 sm:p-3'>
         <p className='line-clamp-2 h-10 text-sm font-medium leading-snug'>
           {bid.title}
         </p>
 
-        {/* Price + countdown */}
         <div className='flex items-end justify-between'>
           <div>
             <p className='text-xs text-muted-foreground'>Current</p>
-            <p className='text-base font-bold tabular-nums'>
+            <p className='text-sm font-bold tabular-nums sm:text-base'>
               {formatCurrency(bid.currentPrice)}
             </p>
           </div>
@@ -97,38 +91,50 @@ export function BidCard({ bid }: { bid: BidCardData }) {
                 {timeLeft.text}
               </span>
             </div>
-            <p className='text-xs text-muted-foreground'>
-              Your bid: {formatCurrency(bid.yourBid)}
-            </p>
+            {bid.yourBid !== undefined && (
+              <p className='text-xs text-muted-foreground'>
+                Your bid: {formatCurrency(bid.yourBid)}
+              </p>
+            )}
           </div>
         </div>
 
-        {/* Status + CTA */}
         <div className='flex items-center justify-between'>
-          <span
-            className={cn(
-              'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium',
-              winning
-                ? 'bg-green-500/10 text-green-700 dark:text-green-400'
-                : 'bg-destructive/10 text-destructive',
-            )}
-          >
-            <span
-              className={cn(
-                'size-1.5 rounded-full',
-                winning ? 'bg-green-500' : 'bg-destructive',
+          {bid.status !== undefined ? (
+            <>
+              <span
+                className={cn(
+                  'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium',
+                  winning
+                    ? 'bg-green-500/10 text-green-700 dark:text-green-400'
+                    : 'bg-destructive/10 text-destructive',
+                )}
+              >
+                <span
+                  className={cn(
+                    'size-1.5 rounded-full',
+                    winning ? 'bg-green-500' : 'bg-destructive',
+                  )}
+                />
+                {winning ? 'Winning' : 'Outbid'}
+              </span>
+              {!winning && (
+                <Link
+                  href={`/auctions/${bid.id}`}
+                  className={cn(buttonVariants({ size: 'xs' }), 'gap-1')}
+                >
+                  <TrendingUp className='size-3' />
+                  Raise Bid
+                </Link>
               )}
-            />
-            {winning ? 'Winning' : 'Outbid'}
-          </span>
-
-          {!winning && (
+            </>
+          ) : (
             <Link
               href={`/auctions/${bid.id}`}
               className={cn(buttonVariants({ size: 'xs' }), 'gap-1')}
             >
-              <TrendingUp className='size-3' />
-              Raise Bid
+              <Gavel className='size-3' />
+              Place Bid
             </Link>
           )}
         </div>

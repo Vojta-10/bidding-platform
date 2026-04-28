@@ -1,15 +1,25 @@
-import ActiveBids from '@/components/layout/dashboard/ActiveBids';
+import ActiveBids from '@/components/layout/dashboard/ActiveBids/ActiveBids';
 import StatsStrip from '@/components/layout/dashboard/StatsStrip';
-import { Lead } from '@/components/ui/typography';
+import Watching from '@/components/layout/dashboard/TwoColGrid/Watching';
+import RecentActivity from '@/components/layout/dashboard/TwoColGrid/RecentActivity';
+import MyListingsCollapbible from '@/components/layout/dashboard/MyListings/MyListingsCollapsible';
 
 export default function DashboardPage() {
   return (
-    <div className='flex flex-col w-9/10 justify-center mx-auto mt-16'>
-      <div className='mx-auto w-full'>
-        <StatsStrip></StatsStrip>
+    <div className='mx-16 my-10 flex flex-col'>
+      <StatsStrip />
+      <ActiveBids />
+      <div className='mt-10 grid grid-cols-1 gap-4 lg:grid-cols-3'>
+        <div className='lg:col-span-2'>
+          <Watching />
+        </div>
+        <div className='lg:col-span-1'>
+          <RecentActivity />
+        </div>
       </div>
-      <Lead className='mt-12 text-3xl font-bold'>Active Bids</Lead>
-      <ActiveBids></ActiveBids>
+      <div className='my-16'>
+        <MyListingsCollapbible></MyListingsCollapbible>
+      </div>
     </div>
   );
 }
