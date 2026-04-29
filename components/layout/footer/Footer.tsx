@@ -65,7 +65,7 @@ export default function Footer() {
         {/* Copyright bar */}
         <div className='border-t border-border pb-8 pt-6'>
           <p className='text-xs text-muted-foreground'>
-            © 2026 AuctionHouse. All rights reserved.
+            © {new Date().getFullYear()} AuctionHouse. All rights reserved.
           </p>
         </div>
       </div>
