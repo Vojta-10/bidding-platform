@@ -7,7 +7,7 @@ export default function FooterSlim() {
         <Link href='/' className='font-heading text-base font-bold text-primary tracking-tight'>
           AuctionHouse
         </Link>
-        <nav className='flex items-center gap-4'>
+        <nav aria-label='Footer navigation' className='flex items-center gap-4'>
           <Link
             href='/'
             className='text-sm text-muted-foreground hover:text-foreground transition-colors'
