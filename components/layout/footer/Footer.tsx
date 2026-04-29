@@ -29,7 +29,7 @@ export default function Footer() {
 
           {/* Explore */}
           <div className='flex flex-col gap-3'>
-            <p className='text-sm font-semibold text-foreground'>Explore</p>
+            <h3 className='text-sm font-semibold text-foreground'>Explore</h3>
             <ul className='flex flex-col gap-2'>
               {exploreLinks.map(({ label, href }) => (
                 <li key={label}>
@@ -46,7 +46,7 @@ export default function Footer() {
 
           {/* Company */}
           <div className='flex flex-col gap-3'>
-            <p className='text-sm font-semibold text-foreground'>Company</p>
+            <h3 className='text-sm font-semibold text-foreground'>Company</h3>
             <ul className='flex flex-col gap-2'>
               {companyLinks.map(({ label, href }) => (
                 <li key={label}>
