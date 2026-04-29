@@ -24,7 +24,10 @@ export function NavbarActions({ user, profile }: NavbarActionsProps) {
         >
           Sign In
         </Link>
-        <Link href='/sign-up' className={cn(buttonVariants({ size: 'sm' }))}>
+        <Link
+          href='/sign-up'
+          className={cn(buttonVariants({ size: 'sm' }), 'ml-2')}
+        >
           Sign Up
         </Link>
       </div>
@@ -36,7 +39,7 @@ export function NavbarActions({ user, profile }: NavbarActionsProps) {
       <NotificationPanel />
       <Link
         href='/auctions/new'
-        className={cn(buttonVariants({ size: 'sm' }), 'gap-1.5 ml-1 py-4')}
+        className={cn(buttonVariants({ size: 'sm' }), 'gap-1.5 ml-1')}
       >
         <Plus className='size-3.5' />
         Create Listing

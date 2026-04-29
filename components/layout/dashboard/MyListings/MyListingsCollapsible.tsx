@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/collapsible';
 import { ChevronDown } from 'lucide-react';
 import { MOCK_LISTINGS } from './types';
-import { ListingsTable } from './ListingsTable';
+import { ListingsTable } from './ListingsTable/ListingsTable';
 import { ListingsPagination } from './ListingsPagination';
 
 const DEFAULT_PAGE_SIZE = 5;

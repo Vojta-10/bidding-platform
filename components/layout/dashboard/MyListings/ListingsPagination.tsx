@@ -30,7 +30,7 @@ function getPageNumbers(
   if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
 
   const pages: (number | 'ellipsis')[] = [1];
-  if (current > 3) pages.push('ellipsis');
+  if (current > 2) pages.push('ellipsis');
 
   const start = Math.max(2, current - 1);
   const end = Math.min(total - 1, current + 1);
@@ -81,6 +81,7 @@ export function ListingsPagination({
             <PaginationContent>
               <PaginationItem>
                 <PaginationPrevious
+                  href='#'
                   onClick={(e) => {
                     e.preventDefault();
                     if (currentPage > 1) onPageChange(currentPage - 1);
@@ -100,6 +101,7 @@ export function ListingsPagination({
                 ) : (
                   <PaginationItem key={page}>
                     <PaginationLink
+                      href='#'
                       isActive={page === currentPage}
                       onClick={(e) => {
                         e.preventDefault();
@@ -114,6 +116,7 @@ export function ListingsPagination({
 
               <PaginationItem>
                 <PaginationNext
+                  href='#'
                   onClick={(e) => {
                     e.preventDefault();
                     if (currentPage < totalPages) onPageChange(currentPage + 1);

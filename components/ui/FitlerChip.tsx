@@ -19,6 +19,8 @@ export function FilterChip({
 }: FilterChipProps) {
   return (
     <button
+      type='button'
+      aria-pressed={isActive}
       onClick={onClick}
       className={cn(
         'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors',

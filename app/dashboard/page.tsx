@@ -2,7 +2,7 @@ import ActiveBids from '@/components/layout/dashboard/ActiveBids/ActiveBids';
 import StatsStrip from '@/components/layout/dashboard/StatsStrip';
 import Watching from '@/components/layout/dashboard/TwoColGrid/Watching';
 import RecentActivity from '@/components/layout/dashboard/TwoColGrid/RecentActivity';
-import MyListingsCollapbible from '@/components/layout/dashboard/MyListings/MyListingsCollapsible';
+import MyListingsCollapsible from '@/components/layout/dashboard/MyListings/MyListingsCollapsible';
 
 export default function DashboardPage() {
   return (
@@ -18,7 +18,7 @@ export default function DashboardPage() {
         </div>
       </div>
       <div className='my-16'>
-        <MyListingsCollapbible></MyListingsCollapbible>
+        <MyListingsCollapsible />
       </div>
     </div>
   );

@@ -7,7 +7,7 @@ export default function DashboardLayout({
 }>) {
   return (
     <>
-      <Navbar></Navbar>
+      <Navbar />
       {children}
     </>
   );

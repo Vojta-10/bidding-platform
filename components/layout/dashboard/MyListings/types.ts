@@ -6,8 +6,7 @@ export interface Listing {
   status: ListingStatus;
   currentPrice: number;
   bids: number;
-  timeLeft: string;
-  urgent?: boolean;
+  deadline: string;
 }
 
 export const statusConfig: Record<
@@ -38,7 +37,7 @@ export const MOCK_LISTINGS: Listing[] = [
     status: 'active',
     currentPrice: 1850,
     bids: 7,
-    timeLeft: '1d 4h',
+    deadline: '2026-04-30T20:00:00.000Z',
   },
   {
     id: '2',
@@ -46,8 +45,7 @@ export const MOCK_LISTINGS: Listing[] = [
     status: 'active',
     currentPrice: 3200,
     bids: 12,
-    timeLeft: '03:42',
-    urgent: true,
+    deadline: '2026-04-29T23:30:00.000Z',
   },
   {
     id: '3',
@@ -55,7 +53,7 @@ export const MOCK_LISTINGS: Listing[] = [
     status: 'sold',
     currentPrice: 5400,
     bids: 23,
-    timeLeft: 'Ended',
+    deadline: '2026-04-28T10:00:00.000Z',
   },
   {
     id: '4',
@@ -63,7 +61,7 @@ export const MOCK_LISTINGS: Listing[] = [
     status: 'closed',
     currentPrice: 28000,
     bids: 4,
-    timeLeft: 'Ended',
+    deadline: '2026-04-27T10:00:00.000Z',
   },
   {
     id: '5',
@@ -71,7 +69,7 @@ export const MOCK_LISTINGS: Listing[] = [
     status: 'closed',
     currentPrice: 28000,
     bids: 4,
-    timeLeft: 'Ended',
+    deadline: '2026-04-27T10:00:00.000Z',
   },
   {
     id: '6',
@@ -79,6 +77,6 @@ export const MOCK_LISTINGS: Listing[] = [
     status: 'closed',
     currentPrice: 28000,
     bids: 4,
-    timeLeft: 'Ended',
+    deadline: '2026-04-27T10:00:00.000Z',
   },
 ];

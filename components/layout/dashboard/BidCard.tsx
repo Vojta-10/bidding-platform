@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Clock, TrendingUp, Gavel } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { buttonVariants } from '@/components/ui/button';
-import { cn, formatCurrency } from '@/lib/utils';
+import { cn, formatCurrency, calcTimeLeft } from '@/lib/utils';
 
 export interface BidCardData {
   id: string;
@@ -15,23 +15,6 @@ export interface BidCardData {
   yourBid?: number;
   deadline: string;
   status?: 'winning' | 'outbid';
-}
-
-function calcTimeLeft(deadline: string) {
-  const diff = new Date(deadline).getTime() - Date.now();
-  if (diff <= 0) return { text: 'Ended', urgent: false };
-
-  const days = Math.floor(diff / 86400000);
-  const hours = Math.floor((diff % 86400000) / 3600000);
-  const minutes = Math.floor((diff % 3600000) / 60000);
-  const seconds = Math.floor((diff % 60000) / 1000);
-
-  if (days > 0) return { text: `${days}d ${hours}h`, urgent: false };
-  if (hours > 0) return { text: `${hours}h ${minutes}m`, urgent: false };
-  return {
-    text: `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`,
-    urgent: true,
-  };
 }
 
 export function BidCard({ bid }: { bid: BidCardData }) {
@@ -85,7 +68,9 @@ export function BidCard({ bid }: { bid: BidCardData }) {
                 suppressHydrationWarning
                 className={cn(
                   'font-mono text-xs font-medium tabular-nums',
-                  urgent ? 'animate-pulse text-destructive' : 'text-muted-foreground',
+                  urgent
+                    ? 'animate-pulse text-destructive'
+                    : 'text-muted-foreground',
                 )}
               >
                 {timeLeft.text}

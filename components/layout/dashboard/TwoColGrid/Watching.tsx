@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { FilterChip } from '../Chip';
+import { FilterChip } from '../../../ui/FitlerChip';
 import { BidsCarousel } from '../BidsCarousel';
 import type { BidCardData } from '../BidCard';
 
@@ -60,14 +60,16 @@ const MOCK_WATCHING: BidCardData[] = [
   },
 ];
 
-const urgentIds = new Set(
-  MOCK_WATCHING.filter(
-    (b) => new Date(b.deadline).getTime() < Date.now() + 3_600_000,
-  ).map((b) => b.id),
-);
-
 export default function Watching() {
   const [filter, setFilter] = useState<Filter>('all');
+  const [urgentIds] = useState(
+    () =>
+      new Set(
+        MOCK_WATCHING.filter(
+          (b) => new Date(b.deadline).getTime() < Date.now() + 3_600_000,
+        ).map((b) => b.id),
+      ),
+  );
 
   const chips: {
     id: Filter;

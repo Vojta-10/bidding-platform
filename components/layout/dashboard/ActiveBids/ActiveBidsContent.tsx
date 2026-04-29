@@ -4,7 +4,7 @@ import { useState, Fragment } from 'react';
 import Link from 'next/link';
 import { Gavel } from 'lucide-react';
 import { CardContent, CardHeader } from '@/components/ui/card';
-import { FilterChip } from '../Chip';
+import { FilterChip } from '../../../ui/FitlerChip';
 import { BidsCarousel } from '../BidsCarousel';
 import type { BidCardData } from '../BidCard';
 

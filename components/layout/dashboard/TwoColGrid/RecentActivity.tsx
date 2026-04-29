@@ -111,6 +111,11 @@ export default function RecentActivity() {
         </h2>
       </CardHeader>
       <CardContent className='p-0'>
+        {MOCK_ACTIVITY.length === 0 ? (
+          <p className='px-6 py-8 text-center text-sm text-muted-foreground'>
+            No recent activity yet.
+          </p>
+        ) : (
         <ul className='max-h-105 overflow-y-auto'>
           {MOCK_ACTIVITY.map((item, i) => {
             const { Icon, bg, color } = iconMap[item.type];
@@ -140,6 +145,7 @@ export default function RecentActivity() {
             );
           })}
         </ul>
+        )}
       </CardContent>
     </Card>
   );
