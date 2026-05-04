@@ -6,7 +6,7 @@ import MyListingsCollapsible from '@/components/layout/dashboard/MyListings/MyLi
 
 export default function DashboardPage() {
   return (
-    <div className='mx-16 my-10 flex flex-col'>
+    <div className='mx-16 my-10 flex flex-col justify-center'>
       <StatsStrip />
       <ActiveBids />
       <div className='mt-10 grid grid-cols-1 gap-4 lg:grid-cols-3'>
@@ -17,7 +17,7 @@ export default function DashboardPage() {
           <RecentActivity />
         </div>
       </div>
-      <div className='my-16'>
+      <div className='mt-16'>
         <MyListingsCollapsible />
       </div>
     </div>

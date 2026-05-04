@@ -1,0 +1,113 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - button [expanded] [ref=e60] [cursor=pointer]:
+        - img [ref=e5]
+      - link [ref=e61] [cursor=pointer]:
+        - /url: /
+        - text: AuctionHouse
+      - generic [ref=e8]:
+        - link [ref=e62] [cursor=pointer]:
+          - /url: /sign-in
+          - text: Sign In
+        - link [ref=e63] [cursor=pointer]:
+          - /url: /sign-up
+          - text: Sign Up
+  - main [ref=e11]:
+    - main [ref=e13]:
+      - img [ref=e64]
+      - generic [ref=e15]:
+        - heading [level=1] [ref=e65]: To get started, edit the page.tsx file.
+        - paragraph [ref=e17]:
+          - text: Looking for a starting point or more instructions? Head over to
+          - link [ref=e66] [cursor=pointer]:
+            - /url: https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app
+            - text: Templates
+          - text: or the
+          - link [ref=e67] [cursor=pointer]:
+            - /url: https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app
+            - text: Learning
+          - text: center.
+      - generic [ref=e20]:
+        - link [ref=e68] [cursor=pointer]:
+          - /url: https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app
+          - img [ref=e69]
+          - text: Deploy Now
+        - link [ref=e70] [cursor=pointer]:
+          - /url: https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app
+          - text: Documentation
+  - contentinfo [ref=e24]:
+    - generic [ref=e25]:
+      - generic [ref=e26]:
+        - generic [ref=e27]:
+          - link [ref=e71] [cursor=pointer]:
+            - /url: /
+            - text: AuctionHouse
+          - paragraph [ref=e29]: Where great things find their value.
+        - generic [ref=e30]:
+          - heading [level=3] [ref=e72]: Explore
+          - list [ref=e32]:
+            - listitem [ref=e33]:
+              - link [ref=e73] [cursor=pointer]:
+                - /url: /auctions
+                - text: Browse
+            - listitem [ref=e35]:
+              - link [ref=e74] [cursor=pointer]:
+                - /url: /auctions?filter=live
+                - text: Live Now
+            - listitem [ref=e37]:
+              - link [ref=e75] [cursor=pointer]:
+                - /url: /auctions?filter=ending
+                - text: Ending Soon
+        - generic [ref=e39]:
+          - heading [level=3] [ref=e76]: Company
+          - list [ref=e41]:
+            - listitem [ref=e42]:
+              - link [ref=e77] [cursor=pointer]:
+                - /url: /about
+                - text: About
+            - listitem [ref=e44]:
+              - link [ref=e78] [cursor=pointer]:
+                - /url: /faq
+                - text: FAQ
+            - listitem [ref=e46]:
+              - link [ref=e79] [cursor=pointer]:
+                - /url: /contact
+                - text: Contact
+      - paragraph [ref=e49]: © 2026 AuctionHouse. All rights reserved.
+  - generic [ref=e54] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=e55]:
+      - img [ref=e56]
+    - generic [ref=e80]:
+      - button "Open issues overlay" [ref=e81]:
+        - generic [ref=e82]:
+          - generic [ref=e83]: "5"
+          - generic [ref=e84]: "6"
+        - generic [ref=e85]:
+          - text: Issue
+          - generic [ref=e86]: s
+      - button "Collapse issues badge" [ref=e87]:
+        - img [ref=e88]
+  - alert [ref=e59]
+  - dialog [ref=e93]:
+    - link "AuctionHouse" [active] [ref=e95] [cursor=pointer]:
+      - /url: /
+    - generic [ref=e98]:
+      - img
+      - searchbox "Search auctions..." [ref=e99]
+    - navigation [ref=e100]:
+      - paragraph [ref=e101]: Browse
+      - link "Browse All" [ref=e102] [cursor=pointer]:
+        - /url: /auctions
+      - link "Live Now" [ref=e103] [cursor=pointer]:
+        - /url: /auctions?filter=live
+      - link "Ending Soon" [ref=e104] [cursor=pointer]:
+        - /url: /auctions?filter=ending
+    - generic [ref=e105]:
+      - link "Sign In" [ref=e106] [cursor=pointer]:
+        - /url: /sign-in
+      - link "Sign Up" [ref=e107] [cursor=pointer]:
+        - /url: /sign-up
+    - button "Close" [ref=e108] [cursor=pointer]:
+      - img
+      - generic [ref=e109]: Close

@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 import { Search } from 'lucide-react';
 import { NavbarActions } from './NavbarActions';
+import { NavbarMobile } from './NavbarMobile';
 
 export default async function Navbar() {
   const supabase = await createClient();
@@ -21,14 +22,16 @@ export default async function Navbar() {
 
   return (
     <header className='sticky top-0 z-50 border-b bg-background/95 backdrop-blur-sm'>
-      <div className='mx-auto flex h-16 max-w-4/5 items-center gap-4 px-4 sm:px-6'>
+      <div className='mx-auto flex h-16 justify-center items-center gap-4 px-4 sm:px-6'>
+        <NavbarMobile user={user} profile={profile} />
+
         <Link href='/' className='mr-5'>
           <span className='font-heading text-xl font-bold text-primary tracking-tight'>
             AuctionHouse
           </span>
         </Link>
 
-        <nav className='hidden md:flex items-center gap-0.5 ml-2'>
+        <nav className='hidden min-[940]:flex items-center gap-0.5 ml-2'>
           <Link
             href='/auctions'
             className='rounded-md px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors'
@@ -52,7 +55,7 @@ export default async function Navbar() {
         <form
           action='/auctions'
           method='GET'
-          className='flex-1 max-w-sm mx-auto hidden sm:block'
+          className='flex-1 max-w-sm mx-auto hidden md:block'
         >
           <div className='relative'>
             <Search className='absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none' />

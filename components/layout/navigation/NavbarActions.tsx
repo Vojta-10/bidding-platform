@@ -20,13 +20,13 @@ export function NavbarActions({ user, profile }: NavbarActionsProps) {
       <div className='flex items-center gap-2'>
         <Link
           href='/sign-in'
-          className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }))}
+          className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'hidden md:inline-flex')}
         >
           Sign In
         </Link>
         <Link
           href='/sign-up'
-          className={cn(buttonVariants({ size: 'sm' }), 'ml-2')}
+          className={cn(buttonVariants({ size: 'sm' }), 'ml-2 hidden md:inline-flex')}
         >
           Sign Up
         </Link>
@@ -39,12 +39,17 @@ export function NavbarActions({ user, profile }: NavbarActionsProps) {
       <NotificationPanel />
       <Link
         href='/auctions/new'
-        className={cn(buttonVariants({ size: 'sm' }), 'gap-1.5 ml-1')}
+        className={cn(
+          buttonVariants({ size: 'sm' }),
+          'gap-1.5 ml-1 hidden sm:inline-flex',
+        )}
       >
         <Plus className='size-3.5' />
         Create Listing
       </Link>
-      <UserMenu user={user} profile={profile} />
+      <div className='hidden sm:block'>
+        <UserMenu user={user} profile={profile} />
+      </div>
     </div>
   );
 }
