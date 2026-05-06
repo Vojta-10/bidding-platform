@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { FilterChip } from '../../../ui/FitlerChip';
+import { FilterChip } from '../../../../components/ui/FitlerChip';
 import { BidsCarousel } from '../BidsCarousel';
 import type { BidCardData } from '../BidCard';
 

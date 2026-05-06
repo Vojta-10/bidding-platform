@@ -1,8 +1,8 @@
-import ActiveBids from '@/components/layout/dashboard/ActiveBids/ActiveBids';
-import StatsStrip from '@/components/layout/dashboard/StatsStrip';
-import Watching from '@/components/layout/dashboard/TwoColGrid/Watching';
-import RecentActivity from '@/components/layout/dashboard/TwoColGrid/RecentActivity';
-import MyListingsCollapsible from '@/components/layout/dashboard/MyListings/MyListingsCollapsible';
+import ActiveBids from '@/app/dashboard/_components/ActiveBids/ActiveBids';
+import StatsStrip from '@/app/dashboard/_components/StatsStrip';
+import Watching from '@/app/dashboard/_components/TwoColGrid/Watching';
+import RecentActivity from '@/app/dashboard/_components/TwoColGrid/RecentActivity';
+import MyListingsCollapsible from '@/app/dashboard/_components/MyListings/MyListingsCollapsible';
 
 export default function DashboardPage() {
   return (

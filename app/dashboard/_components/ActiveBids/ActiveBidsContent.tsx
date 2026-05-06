@@ -4,9 +4,9 @@ import { useState, Fragment } from 'react';
 import Link from 'next/link';
 import { Gavel } from 'lucide-react';
 import { CardContent, CardHeader } from '@/components/ui/card';
-import { FilterChip } from '../../../ui/FitlerChip';
-import { BidsCarousel } from '../BidsCarousel';
-import type { BidCardData } from '../BidCard';
+import { FilterChip } from '../../../../components/ui/FitlerChip';
+import { BidsCarousel } from '@/app/dashboard/_components/BidsCarousel';
+import type { BidCardData } from '@/app/dashboard/_components/BidCard';
 
 type Filter = 'all' | 'outbid' | 'ending-soon';
 

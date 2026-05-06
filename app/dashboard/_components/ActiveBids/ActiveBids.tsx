@@ -1,6 +1,6 @@
 import { Card } from '@/components/ui/card';
 import { ActiveBidsContent } from './ActiveBidsContent';
-import type { BidCardData } from '../BidCard';
+import type { BidCardData } from '../../../../components/layout/dashboard/BidCard';
 
 // Replace with real data: query bids joined with auctions where bidder_id = user.id and status = 'active'
 const MOCK_BIDS: BidCardData[] = [
