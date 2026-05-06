@@ -5,16 +5,36 @@ import { ArrowRight, Clock, ImageIcon } from 'lucide-react';
 import Link from 'next/link';
 
 const featuredAuctions = [
-  { title: 'Vintage Rolex Submariner 1968', price: 4200, timeLeft: '2h 14m', urgent: false },
-  { title: 'Mid-Century Eames Lounge Chair', price: 1850, timeLeft: '5h 40m', urgent: false },
-  { title: 'First Edition Hemingway', price: 320, timeLeft: '23m', urgent: true },
-  { title: 'Leica M6 35mm Film Camera', price: 2100, timeLeft: '1d 3h', urgent: false },
+  {
+    title: 'Vintage Rolex Submariner 1968',
+    price: 4200,
+    timeLeft: '2h 14m',
+    urgent: false,
+  },
+  {
+    title: 'Mid-Century Eames Lounge Chair',
+    price: 1850,
+    timeLeft: '5h 40m',
+    urgent: false,
+  },
+  {
+    title: 'First Edition Hemingway',
+    price: 320,
+    timeLeft: '23m',
+    urgent: true,
+  },
+  {
+    title: 'Leica M6 35mm Film Camera',
+    price: 2100,
+    timeLeft: '1d 3h',
+    urgent: false,
+  },
 ];
 
 export function FeaturedAuctions() {
   return (
-    <section className='py-24 px-5'>
-      <div className='max-w-6xl mx-auto'>
+    <section className='py-24'>
+      <div className='max-w-6xl mx-auto px-4 sm:px-6'>
         <div className='flex items-baseline justify-between mb-10'>
           <h2 className='font-heading text-2xl font-semibold tracking-tight'>
             Live Right Now

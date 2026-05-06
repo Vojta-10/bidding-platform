@@ -12,6 +12,7 @@ export function Hero() {
         className='pointer-events-none absolute inset-0 overflow-hidden'
       >
         <BackgroundOrbs />
+        <div className='absolute bottom-0 inset-x-0 h-40 bg-linear-to-b from-transparent to-background' />
       </div>
       <h1 className='font-heading text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight leading-[1.15] max-w-2xl'>
         Where Great Things Find Their Value.
