@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Clock, TrendingUp, Gavel } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { buttonVariants } from '@/components/ui/button';
-import { cn, formatCurrency, calcTimeLeft } from '@/lib/utils';
+import { cn, formatCurrency } from '@/lib/utils';
+import { useCountdown } from '@/lib/hooks/useCountdown';
 
 export interface BidCardData {
   id: string;
@@ -19,13 +19,7 @@ export interface BidCardData {
 
 export function BidCard({ bid }: { bid: BidCardData }) {
   const winning = bid.status === 'winning';
-  const [timeLeft, setTimeLeft] = useState(() => calcTimeLeft(bid.deadline));
-
-  useEffect(() => {
-    const id = setInterval(() => setTimeLeft(calcTimeLeft(bid.deadline)), 1000);
-    return () => clearInterval(id);
-  }, [bid.deadline]);
-
+  const timeLeft = useCountdown(bid.deadline);
   const { urgent } = timeLeft;
 
   return (

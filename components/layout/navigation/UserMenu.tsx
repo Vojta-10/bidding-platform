@@ -1,7 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { ChevronDown, LayoutDashboard, Gavel, ListOrdered, LogOut } from 'lucide-react';
+import {
+  ChevronDown,
+  LayoutDashboard,
+  Gavel,
+  ListOrdered,
+  LogOut,
+} from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -11,7 +17,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { signOut } from '@/lib/actions/auth';
 import type { User } from '@supabase/supabase-js';
-import type { Profile } from '@/lib/types/database';
+import type { Profile } from '@/types/database';
 
 interface UserMenuProps {
   user: User;
@@ -44,13 +50,19 @@ export function UserMenu({ user, profile }: UserMenuProps) {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          <Link href='/dashboard/bids' className='flex items-center gap-2.5 w-full'>
+          <Link
+            href='/dashboard/bids'
+            className='flex items-center gap-2.5 w-full'
+          >
             <Gavel className='size-4 text-muted-foreground' />
             My Bids
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          <Link href='/dashboard/listings' className='flex items-center gap-2.5 w-full'>
+          <Link
+            href='/dashboard/listings'
+            className='flex items-center gap-2.5 w-full'
+          >
             <ListOrdered className='size-4 text-muted-foreground' />
             My Listings
           </Link>

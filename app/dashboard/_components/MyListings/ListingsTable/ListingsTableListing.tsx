@@ -2,28 +2,17 @@
 
 import { TableCell, TableRow } from '@/components/ui/table';
 import { Listing, statusConfig } from '../types';
-import { calcTimeLeft, cn, formatCurrency } from '@/lib/utils';
+import { cn, formatCurrency } from '@/lib/utils';
+import { useCountdown } from '@/lib/hooks/useCountdown';
 import { ExternalLink, Gavel } from 'lucide-react';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 interface TableListingProps {
   listing: Listing;
 }
 
 export default function TableListing({ listing }: TableListingProps) {
   const { label, dot, pill } = statusConfig[listing.status];
-  const [timeLeft, setTimeLeft] = useState(() =>
-    calcTimeLeft(listing.deadline),
-  );
-
-  useEffect(() => {
-    if (timeLeft.text === 'Ended') return;
-    const id = setInterval(
-      () => setTimeLeft(calcTimeLeft(listing.deadline)),
-      1000,
-    );
-    return () => clearInterval(id);
-  }, [listing.deadline, timeLeft.text]);
+  const timeLeft = useCountdown(listing.deadline);
 
   return (
     <TableRow className='group/row'>

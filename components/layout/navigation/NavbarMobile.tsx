@@ -2,13 +2,26 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, Search, Plus, Gavel, LayoutDashboard, ListOrdered, LogOut } from 'lucide-react';
-import { Sheet, SheetContent, SheetClose, SheetTrigger } from '@/components/ui/sheet';
+import {
+  Menu,
+  Search,
+  Plus,
+  Gavel,
+  LayoutDashboard,
+  ListOrdered,
+  LogOut,
+} from 'lucide-react';
+import {
+  Sheet,
+  SheetContent,
+  SheetClose,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { signOut } from '@/lib/actions/auth';
 import type { User } from '@supabase/supabase-js';
-import type { Profile } from '@/lib/types/database';
+import type { Profile } from '@/types/database';
 
 interface NavbarMobileProps {
   user: User | null;
@@ -34,7 +47,11 @@ export function NavbarMobile({ user, profile }: NavbarMobileProps) {
 
       <SheetContent side='left' className='w-72 p-0 flex flex-col'>
         <div className='flex items-center h-16 px-5 border-b'>
-          <SheetClose render={<Link href='/' />} nativeButton={false} className='font-heading text-xl font-bold text-primary tracking-tight'>
+          <SheetClose
+            render={<Link href='/' />}
+            nativeButton={false}
+            className='font-heading text-xl font-bold text-primary tracking-tight'
+          >
             AuctionHouse
           </SheetClose>
         </div>
@@ -94,7 +111,10 @@ export function NavbarMobile({ user, profile }: NavbarMobileProps) {
               <SheetClose
                 render={<Link href='/auctions/new' />}
                 nativeButton={false}
-                className={cn(buttonVariants({ size: 'sm' }), 'w-full gap-1.5 min-[450]:w-1/2')}
+                className={cn(
+                  buttonVariants({ size: 'sm' }),
+                  'w-full gap-1.5 min-[450]:w-1/2',
+                )}
               >
                 <Plus className='size-3.5' />
                 Create Listing
@@ -136,7 +156,10 @@ export function NavbarMobile({ user, profile }: NavbarMobileProps) {
               <SheetClose
                 render={<Link href='/sign-in' />}
                 nativeButton={false}
-                className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'w-full')}
+                className={cn(
+                  buttonVariants({ variant: 'outline', size: 'sm' }),
+                  'w-full',
+                )}
               >
                 Sign In
               </SheetClose>

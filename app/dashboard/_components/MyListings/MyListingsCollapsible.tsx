@@ -1,38 +1,41 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
+import { usePagination } from '@/lib/hooks/usePagination';
 import { ChevronDown } from 'lucide-react';
 import { MOCK_LISTINGS } from './types';
 import { ListingsTable } from './ListingsTable/ListingsTable';
 import { ListingsPagination } from './ListingsPagination';
 
-const DEFAULT_PAGE_SIZE = 5;
-
 export default function MyListingsCollapsible() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
-
   const listings = MOCK_LISTINGS;
   const activeCount = listings.filter((l) => l.status === 'active').length;
-  const totalPages = Math.max(1, Math.ceil(listings.length / pageSize));
-  const currentItems = listings.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize,
-  );
 
-  function handlePageSizeChange(size: number) {
-    setPageSize(size);
-    setCurrentPage(1);
-  }
+  const { page, pageSize, totalPages, setPage, changePageSize } = usePagination(
+    listings.length,
+    5,
+  );
+  const currentItems = listings.slice((page - 1) * pageSize, page * pageSize);
+
+  const cardRef = useRef<HTMLDivElement>(null);
+  const isFirstRender = useRef(true);
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    cardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, [page]);
 
   return (
-    <Card className='w-full overflow-hidden p-4'>
+    <Card ref={cardRef} className='w-full overflow-hidden p-4'>
       <CardContent className='p-0'>
         <Collapsible className='group' defaultOpen>
           <CollapsibleTrigger className='flex w-full items-center justify-between rounded-2xl px-5 py-4 transition-colors hover:bg-muted/40'>
@@ -53,12 +56,12 @@ export default function MyListingsCollapsible() {
             <div className='border-t border-border'>
               <ListingsTable items={currentItems} />
               <ListingsPagination
-                currentPage={currentPage}
+                currentPage={page}
                 totalPages={totalPages}
                 pageSize={pageSize}
                 totalItems={listings.length}
-                onPageChange={setCurrentPage}
-                onPageSizeChange={handlePageSizeChange}
+                onPageChange={setPage}
+                onPageSizeChange={changePageSize}
               />
             </div>
           </CollapsibleContent>

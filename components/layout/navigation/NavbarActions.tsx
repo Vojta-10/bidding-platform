@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import { NotificationPanel } from './NotificationPanel';
 import { UserMenu } from './UserMenu';
 import type { User } from '@supabase/supabase-js';
-import type { Profile } from '@/lib/types/database';
+import type { Profile } from '@/types/database';
 
 interface NavbarActionsProps {
   user: User | null;
@@ -20,13 +20,19 @@ export function NavbarActions({ user, profile }: NavbarActionsProps) {
       <div className='flex items-center gap-2'>
         <Link
           href='/sign-in'
-          className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'hidden md:inline-flex')}
+          className={cn(
+            buttonVariants({ variant: 'ghost', size: 'sm' }),
+            'hidden md:inline-flex',
+          )}
         >
           Sign In
         </Link>
         <Link
           href='/sign-up'
-          className={cn(buttonVariants({ size: 'sm' }), 'ml-2 hidden md:inline-flex')}
+          className={cn(
+            buttonVariants({ size: 'sm' }),
+            'ml-2 hidden md:inline-flex',
+          )}
         >
           Sign Up
         </Link>
