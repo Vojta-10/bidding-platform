@@ -21,11 +21,12 @@ import { Input } from '@/components/ui/input';
 import { H1, Muted, Subtitle } from '@/components/ui/typography';
 import { signIn } from '@/lib/actions/auth';
 import { signInSchema, type SignInValues } from '@/lib/validations/auth';
+import { useSearchParams } from 'next/navigation';
 
 export function LoginForm() {
   const [serverError, setServerError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
-
+  const redirectTo = useSearchParams().get('redirect');
   const {
     register,
     handleSubmit,
@@ -35,7 +36,7 @@ export function LoginForm() {
   function onSubmit(values: SignInValues) {
     setServerError(null);
     startTransition(async () => {
-      const result = await signIn(values.email, values.password);
+      const result = await signIn(values.email, values.password, redirectTo);
       if (result?.error) setServerError(result.error);
     });
   }
@@ -62,18 +63,12 @@ export function LoginForm() {
                 placeholder='m@example.com'
                 {...register('email')}
               />
-              {errors.email && (
-                <FieldError>{errors.email.message}</FieldError>
-              )}
+              {errors.email && <FieldError>{errors.email.message}</FieldError>}
             </Field>
 
             <Field className='flex flex-col gap-2'>
               <FieldLabel htmlFor='password'>Password</FieldLabel>
-              <Input
-                id='password'
-                type='password'
-                {...register('password')}
-              />
+              <Input id='password' type='password' {...register('password')} />
               {errors.password && (
                 <FieldError>{errors.password.message}</FieldError>
               )}

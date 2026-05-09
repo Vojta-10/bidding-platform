@@ -90,7 +90,7 @@ export function BidForm({
       </div>
       <Button
         size='lg'
-        className='w-full gap-2'
+        className='w-full h-10 gap-2 self-center'
         type='submit'
         disabled={isSubmitting}
       >

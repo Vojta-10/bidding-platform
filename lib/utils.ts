@@ -1,6 +1,8 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
+export const protectedPaths = ['dashboard'];
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -45,7 +47,9 @@ export function calcTimeLeft(deadline: string, extend = false) {
     };
   if (hours > 0)
     return {
-      text: extend ? `${hours}h ${minutes}m ${seconds}s` : `${hours}h ${minutes}m`,
+      text: extend
+        ? `${hours}h ${minutes}m ${seconds}s`
+        : `${hours}h ${minutes}m`,
       urgent: false,
     };
   return {

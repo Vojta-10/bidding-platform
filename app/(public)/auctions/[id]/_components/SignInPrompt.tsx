@@ -21,7 +21,7 @@ export function SignInPrompt({ auctionId }: SignInPromptProps) {
       </div>
       <Link
         href={`/sign-in?redirect=/auctions/${auctionId}`}
-        className={cn(buttonVariants(), 'w-full')}
+        className={cn(buttonVariants(), 'w-full h-10')}
       >
         Sign In
       </Link>

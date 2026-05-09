@@ -26,7 +26,7 @@ export function HowItWorks() {
   return (
     <section className='bg-muted/20 border-t border-border py-24'>
       <div className='max-w-6xl mx-auto px-4 sm:px-6'>
-        <h2 className='font-heading text-2xl font-semibold tracking-tight text-center mb-16'>
+        <h2 className='font-heading text-3xl font-semibold tracking-tight text-center mb-16'>
           How It Works
         </h2>
 

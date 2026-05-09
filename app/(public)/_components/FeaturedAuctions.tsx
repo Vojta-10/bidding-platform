@@ -36,7 +36,7 @@ export function FeaturedAuctions() {
     <section className='py-24'>
       <div className='max-w-6xl mx-auto px-4 sm:px-6'>
         <div className='flex items-baseline justify-between mb-10'>
-          <h2 className='font-heading text-2xl font-semibold tracking-tight'>
+          <h2 className='font-heading text-3xl font-semibold tracking-tight'>
             Live Right Now
           </h2>
           <Link

@@ -59,7 +59,7 @@ export async function updateSession(request: NextRequest) {
     url.pathname = '/sign-in'; // (or '/sign-in' if you named it that)
 
     // This allows you to redirect them back to '/auctions/new' AFTER they log in.
-    url.searchParams.set('next', request.nextUrl.pathname);
+    url.searchParams.set('redirect', request.nextUrl.pathname);
 
     return NextResponse.redirect(url);
   }

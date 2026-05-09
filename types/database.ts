@@ -369,3 +369,4 @@ export const Constants = {
 
 export type Auction = Database['public']['Tables']['auctions']['Row'];
 export type Bids = Database['public']['Tables']['bids']['Row'];
+export type Profile = Database['public']['Tables']['profiles']['Row'];

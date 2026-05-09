@@ -21,11 +21,12 @@ import { Input } from '@/components/ui/input';
 import { H1, Muted, Subtitle } from '@/components/ui/typography';
 import { signUp } from '@/lib/actions/auth';
 import { signUpSchema, type SignUpValues } from '@/lib/validations/auth';
+import { useSearchParams } from 'next/navigation';
 
 export function SignUpForm() {
   const [serverError, setServerError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
-
+  const redirectTo = useSearchParams().get('redirect');
   const {
     register,
     handleSubmit,
@@ -35,7 +36,12 @@ export function SignUpForm() {
   function onSubmit(values: SignUpValues) {
     setServerError(null);
     startTransition(async () => {
-      const result = await signUp(values.email, values.password, values.username);
+      const result = await signUp(
+        values.email,
+        values.password,
+        values.username,
+        redirectTo,
+      );
       if (result?.error) setServerError(result.error);
     });
   }
@@ -75,18 +81,12 @@ export function SignUpForm() {
                 placeholder='m@example.com'
                 {...register('email')}
               />
-              {errors.email && (
-                <FieldError>{errors.email.message}</FieldError>
-              )}
+              {errors.email && <FieldError>{errors.email.message}</FieldError>}
             </Field>
 
             <Field className='flex flex-col gap-2'>
               <FieldLabel htmlFor='password'>Password</FieldLabel>
-              <Input
-                id='password'
-                type='password'
-                {...register('password')}
-              />
+              <Input id='password' type='password' {...register('password')} />
               {errors.password && (
                 <FieldError>{errors.password.message}</FieldError>
               )}

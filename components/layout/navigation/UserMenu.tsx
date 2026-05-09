@@ -18,6 +18,7 @@ import {
 import { signOut } from '@/lib/actions/auth';
 import type { User } from '@supabase/supabase-js';
 import type { Profile } from '@/types/database';
+import { usePathname } from 'next/navigation';
 
 interface UserMenuProps {
   user: User;
@@ -25,11 +26,11 @@ interface UserMenuProps {
 }
 
 export function UserMenu({ user, profile }: UserMenuProps) {
+  const path = usePathname();
   const initial =
     profile?.username?.[0]?.toUpperCase() ??
     user.email?.[0]?.toUpperCase() ??
     '?';
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className='flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm font-medium hover:bg-muted transition-colors outline-none'>
@@ -68,7 +69,7 @@ export function UserMenu({ user, profile }: UserMenuProps) {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem variant='destructive' onClick={() => signOut()}>
+        <DropdownMenuItem variant='destructive' onClick={() => signOut(path)}>
           <LogOut className='size-4' />
           Sign Out
         </DropdownMenuItem>
