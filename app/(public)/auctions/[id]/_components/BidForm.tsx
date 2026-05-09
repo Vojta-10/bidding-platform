@@ -7,13 +7,24 @@ import { Gavel } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createBidSchema, type BidFormValues } from '@/lib/validations/bids';
 import { useForm } from 'react-hook-form';
+import { placeBid } from '@/lib/actions/bids';
+import { toasts } from '@/components/shared/toast';
 
 interface BidFormProps {
-  auctionId: string;
+  auction: {
+    id: string;
+    sellerId: string;
+    winnerId: string | null;
+  };
   currentPrice: number;
+  userId: string;
 }
 
-export function BidForm({ auctionId, currentPrice }: BidFormProps) {
+export function BidForm({
+  auction: { id, sellerId, winnerId },
+  currentPrice,
+  userId,
+}: BidFormProps) {
   const minBid = currentPrice + 1;
 
   const {
@@ -25,13 +36,31 @@ export function BidForm({ auctionId, currentPrice }: BidFormProps) {
     defaultValues: { amount: minBid },
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async function onSubmit(_data: BidFormValues) {
-    void auctionId;
+    const bidAmount = _data.amount;
+    const auction = {
+      id,
+      sellerId,
+      winnerId,
+    };
+    const result = await placeBid({
+      bidderId: userId,
+      bidAmount,
+      auction,
+    });
+    if ('error' in result) {
+      return toasts.bidFailed(result.error);
+    } else {
+      return toasts.bidPlaced(bidAmount);
+    }
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate className='flex flex-col gap-3'>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      noValidate
+      className='flex flex-col gap-3'
+    >
       <div className='flex flex-col gap-1.5'>
         <label htmlFor='bid-amount' className='text-sm font-medium'>
           Your bid
@@ -59,7 +88,12 @@ export function BidForm({ auctionId, currentPrice }: BidFormProps) {
           </p>
         )}
       </div>
-      <Button size='lg' className='w-full gap-2' type='submit' disabled={isSubmitting}>
+      <Button
+        size='lg'
+        className='w-full gap-2'
+        type='submit'
+        disabled={isSubmitting}
+      >
         <Gavel className='size-4' />
         {isSubmitting ? 'Placing bid…' : 'Place Bid'}
       </Button>

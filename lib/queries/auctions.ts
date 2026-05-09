@@ -39,7 +39,8 @@ export async function getBids(auctionId: string): Promise<null | bidsType[]> {
   const { data, error } = await supabase
     .from('bids')
     .select('id, bidder_id, amount, created_at, profiles (username)')
-    .eq('auction_id', auctionId);
+    .eq('auction_id', auctionId)
+    .order('created_at', { ascending: false });
 
   if (error) {
     redirect('/auctions?failed=true');

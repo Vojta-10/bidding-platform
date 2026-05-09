@@ -19,9 +19,9 @@ interface BidPanelProps {
   status: string;
   auction: {
     id: string;
-    seller_id: string;
-    winner_id: string | null;
-    current_price: number;
+    sellerId: string;
+    winnerId: string | null;
+    currentPrice: number;
     bid_count: number;
   };
   currentUser: User | null;
@@ -40,11 +40,12 @@ export function BidPanel({
 }: BidPanelProps) {
   const router = useRouter();
   const isClosed = status === 'closed';
-  const isSeller = !!currentUser && currentUser.id === auction.seller_id;
+  const isSeller = !!currentUser && currentUser.id === auction.sellerId;
   const isLoggedIn = !!currentUser;
   const leaderUsername = leader?.profiles.username;
   const leaderId = leader?.bidder_id;
-
+  const sellerId = auction.sellerId;
+  const winnerId = auction.winnerId;
   return (
     <Card className='gap-0 py-0'>
       <CardContent className='flex flex-col gap-5 p-5'>
@@ -69,7 +70,7 @@ export function BidPanel({
 
         {isClosed ? (
           <EndedBanner
-            finalPrice={auction.current_price}
+            finalPrice={auction.currentPrice}
             winnerUsername={null}
           />
         ) : isSeller ? (
@@ -80,7 +81,11 @@ export function BidPanel({
             leaderUsername={leaderUsername ?? null}
           />
         ) : isLoggedIn ? (
-          <BidForm auctionId={auction.id} currentPrice={initialPrice} />
+          <BidForm
+            auction={{ id: auction.id, sellerId, winnerId }}
+            currentPrice={initialPrice}
+            userId={currentUser.id}
+          />
         ) : (
           <SignInPrompt auctionId={auction.id} />
         )}

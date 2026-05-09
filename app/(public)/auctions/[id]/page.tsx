@@ -56,7 +56,13 @@ export default async function AuctionPage({
                 initialPrice={auction.current_price}
                 deadline={auction.deadline}
                 status={auction.status}
-                auction={auction}
+                auction={{
+                  id: auction.id,
+                  sellerId: auction.seller_id,
+                  winnerId: auction.winner_id,
+                  currentPrice: auction.current_price,
+                  bid_count: auction.bid_count,
+                }}
                 currentUser={user}
                 initialBidCount={auction.bid_count}
                 leader={leader}
@@ -77,7 +83,13 @@ export default async function AuctionPage({
               initialPrice={auction.current_price}
               deadline={auction.deadline}
               status={auction.status}
-              auction={auction}
+              auction={{
+                id: auction.id,
+                sellerId: auction.seller_id,
+                winnerId: auction.winner_id,
+                currentPrice: auction.current_price,
+                bid_count: auction.bid_count,
+              }}
               currentUser={user}
               initialBidCount={auction.bid_count}
               leader={leader}
