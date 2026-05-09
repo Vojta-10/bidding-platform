@@ -18,7 +18,7 @@ interface BidHistoryBid {
   id: string;
   amount: number;
   created_at: string;
-  bidder: { username: string };
+  profiles: { username: string };
 }
 
 interface BidHistoryProps {
@@ -38,8 +38,16 @@ function formatTimeAgo(dateStr: string): string {
 
 export function BidHistory({ initialBids }: BidHistoryProps) {
   const bids = initialBids;
-  const { page, pageSize, totalPages, setPage, canGoPrev, canGoNext, goPrev, goNext } =
-    usePagination(bids.length, PAGE_SIZE);
+  const {
+    page,
+    pageSize,
+    totalPages,
+    setPage,
+    canGoPrev,
+    canGoNext,
+    goPrev,
+    goNext,
+  } = usePagination(bids.length, PAGE_SIZE);
 
   const pageBids = bids.slice((page - 1) * pageSize, page * pageSize);
 
@@ -61,7 +69,9 @@ export function BidHistory({ initialBids }: BidHistoryProps) {
           </div>
           <div className='flex flex-col gap-1'>
             <p className='text-sm font-medium'>No bids yet</p>
-            <p className='text-xs text-muted-foreground'>Be the first to place a bid!</p>
+            <p className='text-xs text-muted-foreground'>
+              Be the first to place a bid!
+            </p>
           </div>
         </div>
       ) : (
@@ -74,7 +84,8 @@ export function BidHistory({ initialBids }: BidHistoryProps) {
                   key={bid.id}
                   className={cn(
                     'flex items-center justify-between px-4 py-3',
-                    localIndex !== pageBids.length - 1 && 'border-b border-border',
+                    localIndex !== pageBids.length - 1 &&
+                      'border-b border-border',
                     globalRank === 1 && 'bg-primary/5',
                   )}
                 >
@@ -89,7 +100,9 @@ export function BidHistory({ initialBids }: BidHistoryProps) {
                     >
                       {globalRank}
                     </span>
-                    <span className='text-sm font-medium'>@{bid.bidder.username}</span>
+                    <span className='text-sm font-medium'>
+                      @{bid.profiles.username}
+                    </span>
                   </div>
                   <div className='flex items-center gap-4'>
                     <span className='text-sm font-bold text-primary tabular-nums'>

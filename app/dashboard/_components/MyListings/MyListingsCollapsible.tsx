@@ -24,14 +24,13 @@ export default function MyListingsCollapsible() {
   const currentItems = listings.slice((page - 1) * pageSize, page * pageSize);
 
   const cardRef = useRef<HTMLDivElement>(null);
-  const isFirstRender = useRef(true);
+  const prevPage = useRef(page);
 
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
+    if (page !== prevPage.current) {
+      cardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      prevPage.current = page;
     }
-    cardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }, [page]);
 
   return (

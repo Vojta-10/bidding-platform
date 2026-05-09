@@ -53,7 +53,7 @@ Three distinct clients — using the wrong one will silently break auth:
 |---|---|---|
 | `lib/supabase/client.ts` | Client Components, hooks | `createBrowserClient` — singleton, safe to call repeatedly |
 | `lib/supabase/server.ts` | Server Components, Server Functions, Route Handlers | `createServerClient` with async cookies — must be called per-request, not cached |
-| `lib/supabase/middleware.ts` | `middleware.ts` only | Refreshes the session cookie on every request — critical for auth |
+| `lib/supabase/proxy.ts` | `proxy.ts` only | Refreshes the session cookie on every request — critical for auth |
 
 ### Bid placement — always use the `place_bid` RPC
 
