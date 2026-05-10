@@ -9,6 +9,7 @@ import { createBidSchema, type BidFormValues } from '@/lib/validations/bids';
 import { useForm } from 'react-hook-form';
 import { placeBid } from '@/lib/actions/bids';
 import { toasts } from '@/components/shared/toast';
+import { useTransition } from 'react';
 
 interface BidFormProps {
   auction: {
@@ -26,11 +27,12 @@ export function BidForm({
   userId,
 }: BidFormProps) {
   const minBid = currentPrice + 1;
+  const [isSubmitting, startTransition] = useTransition();
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<BidFormValues>({
     resolver: zodResolver(createBidSchema(currentPrice)),
     defaultValues: { amount: minBid },
@@ -43,16 +45,18 @@ export function BidForm({
       sellerId,
       winnerId,
     };
-    const result = await placeBid({
-      bidderId: userId,
-      bidAmount,
-      auction,
+    startTransition(async () => {
+      const result = await placeBid({
+        bidderId: userId,
+        bidAmount,
+        auction,
+      });
+      if ('error' in result) {
+        return toasts.bidFailed(result.error);
+      } else {
+        return toasts.bidPlaced(bidAmount);
+      }
     });
-    if ('error' in result) {
-      return toasts.bidFailed(result.error);
-    } else {
-      return toasts.bidPlaced(bidAmount);
-    }
   }
 
   return (

@@ -111,6 +111,7 @@ export function SignUpForm() {
                 type='submit'
                 className='w-full mt-1'
                 size='lg'
+                formNoValidate
                 disabled={isPending}
               >
                 {isPending ? 'Creating account…' : 'Sign up'}

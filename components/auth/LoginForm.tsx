@@ -80,6 +80,7 @@ export function LoginForm() {
                 className='w-full mt-1'
                 size='lg'
                 disabled={isPending}
+                formNoValidate
               >
                 {isPending ? 'Signing in…' : 'Login'}
               </Button>
