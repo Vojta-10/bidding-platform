@@ -11,19 +11,14 @@ import {
 import { cn, formatCurrency, getPageNumbers } from '@/lib/utils';
 import { usePagination } from '@/lib/hooks/usePagination';
 import { ChevronLeft, ChevronRight, Gavel } from 'lucide-react';
+import { bidsType } from '@/lib/queries/auctions';
+import { useRealtimeBids } from '@/lib/hooks/useRealtimeBids';
 
 const PAGE_SIZE = 5;
 
-interface BidHistoryBid {
-  id: string;
-  amount: number;
-  created_at: string;
-  profiles: { username: string };
-}
-
 interface BidHistoryProps {
+  initialBids: bidsType[];
   auctionId: string;
-  initialBids: BidHistoryBid[];
 }
 
 function formatTimeAgo(dateStr: string): string {
@@ -36,7 +31,7 @@ function formatTimeAgo(dateStr: string): string {
   return `${Math.floor(hours / 24)}d ago`;
 }
 
-export function BidHistory({ initialBids }: BidHistoryProps) {
+export function BidHistory({ initialBids, auctionId }: BidHistoryProps) {
   const bids = initialBids;
   const {
     page,
@@ -48,8 +43,9 @@ export function BidHistory({ initialBids }: BidHistoryProps) {
     goPrev,
     goNext,
   } = usePagination(bids.length, PAGE_SIZE);
+  const newBids = useRealtimeBids(bids, auctionId);
 
-  const pageBids = bids.slice((page - 1) * pageSize, page * pageSize);
+  const pageBids = newBids.slice((page - 1) * pageSize, page * pageSize);
 
   return (
     <section>

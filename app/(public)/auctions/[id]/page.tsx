@@ -26,7 +26,6 @@ export default async function AuctionPage({
     data: { user },
   } = await supabase.auth.getUser();
 
-  const leader = bids?.[0] ?? null;
   // ---
 
   return (
@@ -65,7 +64,7 @@ export default async function AuctionPage({
                 }}
                 currentUser={user}
                 initialBidCount={auction.bid_count}
-                leader={leader}
+                initialBids={bids}
               />
             </div>
 
@@ -92,7 +91,7 @@ export default async function AuctionPage({
               }}
               currentUser={user}
               initialBidCount={auction.bid_count}
-              leader={leader}
+              initialBids={bids}
             />
           </div>
         </div>

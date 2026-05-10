@@ -36,7 +36,14 @@ export async function placeBid({
       error: 'You own the auction you can not place bid on it',
     };
 
-  if (auction.winnerId === user.id)
+  const { data: currentLeader } = await supabase
+    .from('bids')
+    .select('bidder_id')
+    .eq('auction_id', auction.id)
+    .limit(1)
+    .single();
+
+  if (currentLeader?.bidder_id === user.id)
     return { error: 'You are already leading this auction' };
   const p_auction_id = auction.id;
   const p_bidder_id = user.id;

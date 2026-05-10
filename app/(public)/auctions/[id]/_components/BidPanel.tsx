@@ -12,6 +12,8 @@ import { SignInPrompt } from './SignInPrompt';
 import { User } from '@supabase/supabase-js';
 import { Subtitle } from '@/components/ui/typography';
 import { bidsType } from '@/lib/queries/auctions';
+import { useRealtimeAuction } from '@/lib/hooks/useRealtimeAuction';
+import { useRealtimeBids } from '@/lib/hooks/useRealtimeBids';
 
 interface BidPanelProps {
   initialPrice: number;
@@ -26,7 +28,7 @@ interface BidPanelProps {
   };
   currentUser: User | null;
   initialBidCount: number;
-  leader?: bidsType;
+  initialBids: bidsType[];
 }
 
 export function BidPanel({
@@ -36,9 +38,12 @@ export function BidPanel({
   auction,
   currentUser,
   initialBidCount,
-  leader,
+  initialBids,
 }: BidPanelProps) {
   const router = useRouter();
+  const newPrice = useRealtimeAuction(auction.id, initialPrice);
+  const newBids = useRealtimeBids(initialBids, auction.id);
+  const leader = newBids?.[0] ?? null;
   const isClosed = status === 'closed';
   const isSeller = !!currentUser && currentUser.id === auction.sellerId;
   const isLoggedIn = !!currentUser;
@@ -46,12 +51,13 @@ export function BidPanel({
   const leaderId = leader?.bidder_id;
   const sellerId = auction.sellerId;
   const winnerId = auction.winnerId;
+
   return (
     <Card className='gap-0 py-0'>
       <CardContent className='flex flex-col gap-5 p-5'>
         <div className='flex flex-col gap-4'>
           <div className='flex justify-between items-center'>
-            <CurrentPrice price={initialPrice} />
+            <CurrentPrice price={newPrice} />
             {leaderId === currentUser?.id ? (
               <Subtitle className='text-primary font-bold tracking-tight'>
                 You are leading!
@@ -71,19 +77,19 @@ export function BidPanel({
         {isClosed ? (
           <EndedBanner
             finalPrice={auction.currentPrice}
-            winnerUsername={null}
+            winnerUsername={leader.profiles.username ?? null}
           />
         ) : isSeller ? (
           <SellerPanel
             auctionId={auction.id}
             bidCount={initialBidCount}
-            currentPrice={initialPrice}
+            currentPrice={newPrice}
             leaderUsername={leaderUsername ?? null}
           />
         ) : isLoggedIn ? (
           <BidForm
             auction={{ id: auction.id, sellerId, winnerId }}
-            currentPrice={initialPrice}
+            currentPrice={newPrice}
             userId={currentUser.id}
           />
         ) : (

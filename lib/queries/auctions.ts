@@ -8,7 +8,7 @@ export type bidsType = {
   amount: number;
   created_at: string;
   profiles: {
-    username: string;
+    username?: string;
   };
 };
 
