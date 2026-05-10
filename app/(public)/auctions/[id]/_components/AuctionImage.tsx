@@ -17,7 +17,7 @@ export function AuctionImage({ imageUrl, title }: AuctionImageProps) {
 
   return (
     <div className='relative aspect-video w-full rounded-xl overflow-hidden ring-1 ring-border'>
-      <Image src={imageUrl} alt={title} fill className='object-cover' />
+      <Image loading={'eager'} src={imageUrl} alt={title} fill className='object-cover' />
     </div>
   );
 }

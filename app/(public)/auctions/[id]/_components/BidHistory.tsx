@@ -32,7 +32,7 @@ function formatTimeAgo(dateStr: string): string {
 }
 
 export function BidHistory({ initialBids, auctionId }: BidHistoryProps) {
-  const bids = initialBids;
+  const newBids = useRealtimeBids(initialBids, auctionId);
   const {
     page,
     pageSize,
@@ -42,8 +42,7 @@ export function BidHistory({ initialBids, auctionId }: BidHistoryProps) {
     canGoNext,
     goPrev,
     goNext,
-  } = usePagination(bids.length, PAGE_SIZE);
-  const newBids = useRealtimeBids(bids, auctionId);
+  } = usePagination(newBids.length, PAGE_SIZE);
 
   const pageBids = newBids.slice((page - 1) * pageSize, page * pageSize);
 
@@ -51,14 +50,14 @@ export function BidHistory({ initialBids, auctionId }: BidHistoryProps) {
     <section>
       <div className='mb-4 flex items-center gap-3'>
         <h2 className='font-heading text-lg font-semibold'>Bid History</h2>
-        {bids.length > 0 && (
+        {newBids.length > 0 && (
           <span className='inline-flex items-center justify-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary tabular-nums'>
-            {bids.length}
+            {newBids.length}
           </span>
         )}
       </div>
 
-      {bids.length === 0 ? (
+      {newBids.length === 0 ? (
         <div className='flex flex-col items-center gap-3 py-14 text-center'>
           <div className='flex h-12 w-12 items-center justify-center rounded-full bg-muted'>
             <Gavel className='size-6 text-muted-foreground' />
