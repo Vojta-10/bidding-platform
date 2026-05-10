@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const newAuctionSchema = z.object({
   title: z
     .string()
-    .max(20, "Title can't be longer than 20 characters!")
+    .max(90, "Title can't be longer than 90 characters!")
     .nonempty('Title cannot be empty!'),
   description: z
     .string()

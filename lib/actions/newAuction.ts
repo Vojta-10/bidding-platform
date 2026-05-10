@@ -26,7 +26,7 @@ export async function newAuction(
     deadline,
   });
 
-  if (!result.success) return { error: result.error.message };
+  if (!result.success) return { error: result.error.issues[0].message };
 
   const { data, error } = await supabase
     .from('auctions')

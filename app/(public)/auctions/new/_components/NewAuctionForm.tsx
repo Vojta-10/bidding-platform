@@ -28,12 +28,12 @@ async function uploadFile(
   } = await supabase.auth.getUser();
   if (!user) return;
   if (!file) return;
-
+  if (file.type !== 'image/jpeg' && file.type !== 'image/png') return;
   const { data, error } = await supabase.storage
     .from('auction-images')
-    .upload(`${user?.id}/${Date.now()}-${title}`, file);
+    .upload(`${user?.id}/${Date.now()}-${title.replace(/\s+/g, '-')}`, file);
   if (error) {
-    toast.error('There was an error uploading file');
+    return;
   } else {
     const { data: fileUrl } = supabase.storage
       .from('auction-images')
@@ -54,14 +54,24 @@ export function NewAuctionForm() {
   } = useForm<newAuctionValues>({ resolver: zodResolver(newAuctionSchema) });
 
   async function onSubmit(_data: newAuctionValues) {
-    const url = await uploadFile(imageFile, _data.title, supabase);
-    await newAuction(
+    let imageUrl: string | undefined;
+
+    if (imageFile) {
+      imageUrl = await uploadFile(imageFile, _data.title, supabase);
+      if (!imageUrl)
+        toast.warning(
+          'Image upload failed — listing will be created with a placeholder.',
+        );
+    }
+
+    const result = await newAuction(
       _data.title,
       _data.description,
       _data.startingPrice,
       _data.deadline,
-      url,
+      imageUrl,
     );
+    if (result?.error) toast.error(result.error);
   }
 
   return (
@@ -128,6 +138,7 @@ export function NewAuctionForm() {
                   type='file'
                   placeholder='Choose image file'
                   onChange={(e) => setImageFile(e.target.files?.[0])}
+                  accept='image/jpeg,image/png'
                 />
                 <FieldDescription>
                   If unselected then generic image icon will be shown
