@@ -55,6 +55,7 @@ export function NewAuctionForm() {
 
   async function onSubmit(_data: newAuctionValues) {
     let imageUrl: string | undefined;
+    const correctDate = new Date(_data.deadline).toISOString();
 
     if (imageFile) {
       imageUrl = await uploadFile(imageFile, _data.title, supabase);
@@ -68,66 +69,88 @@ export function NewAuctionForm() {
       _data.title,
       _data.description,
       _data.startingPrice,
-      _data.deadline,
+      correctDate,
       imageUrl,
     );
     if (result?.error) toast.error(result.error);
   }
 
   return (
-    <div className='flex flex-col mt-10 w-4/5'>
-      <form onSubmit={handleSubmit(onSubmit)}>
+    <div className='w-full max-w-2xl mx-auto mt-10 px-4'>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+        aria-label='Create new auction listing'
+      >
         <FieldGroup>
           <FieldSet>
             <FieldGroup>
-              <Field>
+              <Field data-invalid={errors.title ? 'true' : undefined}>
                 <FieldLabel htmlFor='title-field'>Title</FieldLabel>
                 <Input
                   id='title-field'
                   placeholder='Enter title'
+                  aria-required='true'
+                  aria-invalid={!!errors.title}
+                  aria-describedby={errors.title ? 'title-error' : undefined}
                   {...register('title')}
                 />
                 {errors.title && (
-                  <FieldError>{errors.title.message}</FieldError>
+                  <FieldError id='title-error'>{errors.title.message}</FieldError>
                 )}
               </Field>
-              <Field>
+              <Field data-invalid={errors.description ? 'true' : undefined}>
                 <FieldLabel htmlFor='desc-field'>Description</FieldLabel>
                 <Input
                   id='desc-field'
                   placeholder='Enter description'
+                  aria-required='true'
+                  aria-invalid={!!errors.description}
+                  aria-describedby={
+                    errors.description ? 'desc-error desc-hint' : 'desc-hint'
+                  }
                   {...register('description')}
                 />
                 {errors.description && (
-                  <FieldError>{errors.description.message}</FieldError>
+                  <FieldError id='desc-error'>{errors.description.message}</FieldError>
                 )}
-                <FieldDescription>Max 200 characters</FieldDescription>
+                <FieldDescription id='desc-hint'>Max 200 characters</FieldDescription>
               </Field>
-              <div className='flex justify-around mt-6 gap-8'>
-                <Field>
-                  <FieldLabel htmlFor='starting-price'>
-                    Starting Price
-                  </FieldLabel>
+              <div className='flex flex-col sm:flex-row gap-4 sm:gap-8 mt-2'>
+                <Field
+                  className='flex-1'
+                  data-invalid={errors.startingPrice ? 'true' : undefined}
+                >
+                  <FieldLabel htmlFor='starting-price'>Starting Price</FieldLabel>
                   <Input
                     id='starting-price'
                     placeholder='Enter starting price'
                     type='number'
                     min={1}
+                    aria-required='true'
+                    aria-invalid={!!errors.startingPrice}
+                    aria-describedby={errors.startingPrice ? 'price-error' : undefined}
                     {...register('startingPrice', { valueAsNumber: true })}
                   />
                   {errors.startingPrice && (
-                    <FieldError>{errors.startingPrice.message}</FieldError>
+                    <FieldError id='price-error'>{errors.startingPrice.message}</FieldError>
                   )}
                 </Field>
-                <Field>
+                <Field
+                  className='flex-1'
+                  data-invalid={errors.deadline ? 'true' : undefined}
+                >
                   <FieldLabel htmlFor='deadline-field'>Deadline</FieldLabel>
                   <Input
                     type='datetime-local'
                     id='deadline-field'
+                    aria-required='true'
+                    aria-invalid={!!errors.deadline}
+                    aria-describedby={errors.deadline ? 'deadline-error' : undefined}
                     {...register('deadline')}
                   />
                   {errors.deadline && (
-                    <FieldError>{errors.deadline.message}</FieldError>
+                    <FieldError id='deadline-error'>{errors.deadline.message}</FieldError>
                   )}
                 </Field>
               </div>
@@ -136,11 +159,11 @@ export function NewAuctionForm() {
                 <Input
                   id='image-upload'
                   type='file'
-                  placeholder='Choose image file'
+                  aria-describedby='image-hint'
                   onChange={(e) => setImageFile(e.target.files?.[0])}
                   accept='image/jpeg,image/png'
                 />
-                <FieldDescription>
+                <FieldDescription id='image-hint'>
                   If unselected then generic image icon will be shown
                 </FieldDescription>
               </Field>
@@ -153,11 +176,12 @@ export function NewAuctionForm() {
             <Button
               variant='default'
               type='submit'
-              className='min-w-30 h-10'
+              className='w-full sm:w-auto min-w-30 h-10'
               disabled={isSubmitting}
+              aria-disabled={isSubmitting}
               formNoValidate
             >
-              Submit
+              {isSubmitting ? 'Submitting…' : 'Submit'}
             </Button>
           </Field>
         </FieldGroup>

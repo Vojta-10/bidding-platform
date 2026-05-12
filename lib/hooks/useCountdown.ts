@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { calcTimeLeft } from '@/lib/utils';
 
 export function useCountdown(
@@ -8,7 +8,13 @@ export function useCountdown(
   extend = false,
   onExpire?: () => void,
 ) {
-  const [timeLeft, setTimeLeft] = useState(() => calcTimeLeft(deadline, extend));
+  const [timeLeft, setTimeLeft] = useState(() =>
+    calcTimeLeft(deadline, extend),
+  );
+  const onExpireRef = useRef(onExpire);
+  useEffect(() => {
+    onExpireRef.current = onExpire;
+  }, [onExpire]);
 
   useEffect(() => {
     if (calcTimeLeft(deadline, extend).text === 'Ended') return;
@@ -18,12 +24,14 @@ export function useCountdown(
       setTimeLeft(next);
       if (next.text === 'Ended') {
         clearInterval(id);
-        onExpire?.();
+        if (onExpireRef.current) {
+          onExpireRef.current();
+        }
       }
     }, 1000);
 
     return () => clearInterval(id);
-  }, [deadline, extend, onExpire]);
+  }, [deadline, extend]);
 
   return timeLeft;
 }

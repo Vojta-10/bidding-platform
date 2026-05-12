@@ -14,6 +14,7 @@ import { Subtitle } from '@/components/ui/typography';
 import { bidsType } from '@/lib/queries/auctions';
 import { useRealtimeAuction } from '@/lib/hooks/useRealtimeAuction';
 import { useRealtimeBids } from '@/lib/hooks/useRealtimeBids';
+import { closeAuction } from '@/lib/actions/closeAuction';
 
 interface BidPanelProps {
   initialPrice: number;
@@ -58,7 +59,7 @@ export function BidPanel({
         <div className='flex flex-col gap-4'>
           <div className='flex justify-between items-center'>
             <CurrentPrice price={newPrice} />
-            {leaderId === currentUser?.id ? (
+            {!isClosed && currentUser && leaderId === currentUser?.id ? (
               <Subtitle className='text-primary font-bold tracking-tight'>
                 You are leading!
               </Subtitle>
@@ -68,7 +69,13 @@ export function BidPanel({
           </div>
 
           {!isClosed && (
-            <CountdownTimer deadline={deadline} onExpire={router.refresh} />
+            <CountdownTimer
+              deadline={deadline}
+              onExpire={async () => {
+                await closeAuction();
+                router.refresh();
+              }}
+            />
           )}
         </div>
 
