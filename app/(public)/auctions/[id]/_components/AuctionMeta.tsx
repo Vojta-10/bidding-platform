@@ -1,8 +1,17 @@
+'use client';
+import { Button } from '@/components/ui/button';
+import { addToWatchlist, removeFromWatchlist } from '@/lib/actions/watchlist';
+import { Binoculars } from 'lucide-react';
+import { useState } from 'react';
+import { toast } from 'sonner';
+
 interface AuctionMetaProps {
   title: string;
   description: string;
   seller: { username: string };
   createdAt: string;
+  isWatched: boolean | undefined;
+  auctionId: string;
 }
 
 function formatRelativeDate(dateStr: string): string {
@@ -15,19 +24,51 @@ function formatRelativeDate(dateStr: string): string {
   return `${Math.floor(days / 30)} months ago`;
 }
 
-export function AuctionMeta({ title, description, seller, createdAt }: AuctionMetaProps) {
+export function AuctionMeta({
+  title,
+  description,
+  seller,
+  createdAt,
+  isWatched,
+  auctionId,
+}: AuctionMetaProps) {
+  const [watched, setWatched] = useState<boolean | undefined>(isWatched);
+
   return (
     <div className='flex flex-col gap-3'>
-      <h1 className='font-heading text-2xl font-semibold leading-tight tracking-tight'>
-        {title}
-      </h1>
+      <div className='flex justify-between'>
+        <h1 className='font-heading text-2xl font-semibold leading-tight tracking-tight'>
+          {title}
+        </h1>
+        <Button
+          variant={'outline'}
+          className={watched ? 'border-primary' : ''}
+          onClick={async () => {
+            let res;
+            if (watched) {
+              res = await removeFromWatchlist(auctionId);
+            } else {
+              res = await addToWatchlist(auctionId);
+            }
+            if (!res.success) {
+              toast.error(res.errorMessage);
+              return;
+            }
+            setWatched(!watched);
+          }}
+        >
+          <Binoculars /> {watched ? 'Unwatch' : 'Watch'}
+        </Button>
+      </div>
       <p className='text-sm text-muted-foreground'>
         Listed by{' '}
         <span className='font-medium text-foreground'>@{seller.username}</span>
         {' · '}
         {formatRelativeDate(createdAt)}
       </p>
-      <p className='text-sm text-muted-foreground leading-relaxed'>{description}</p>
+      <p className='text-sm text-muted-foreground leading-relaxed'>
+        {description}
+      </p>
     </div>
   );
 }

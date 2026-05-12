@@ -9,6 +9,7 @@ import { BidPanel } from './_components/BidPanel';
 import { createClient } from '@/lib/supabase/server';
 import { getAuction, getBids } from '@/lib/queries/auctions';
 import { notFound, redirect } from 'next/navigation';
+import { checkWatched } from '@/lib/queries/watchlist';
 export default async function AuctionPage({
   params,
 }: {
@@ -21,6 +22,7 @@ export default async function AuctionPage({
   if (!auction) notFound();
   const bids = await getBids(id);
   if (!bids) redirect('/auctions?failed=true');
+  const { isWatched } = await checkWatched(auction.id);
 
   const {
     data: { user },
@@ -73,6 +75,8 @@ export default async function AuctionPage({
               description={auction.description}
               seller={auction.profiles}
               createdAt={auction.created_at}
+              isWatched={isWatched}
+              auctionId={auction.id}
             />
           </div>
 
