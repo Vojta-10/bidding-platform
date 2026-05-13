@@ -84,7 +84,7 @@ export function BidPanel({
         {isClosed ? (
           <EndedBanner
             finalPrice={auction.currentPrice}
-            winnerUsername={leader.profiles.username ?? null}
+            winnerUsername={leader?.profiles.username ?? null}
           />
         ) : isSeller ? (
           <SellerPanel

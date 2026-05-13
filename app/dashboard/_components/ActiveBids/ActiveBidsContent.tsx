@@ -26,11 +26,13 @@ export function ActiveBidsContent({ bids }: ActiveBidsContentProps) {
     );
   });
 
-  const outbidCount = bids.filter((b) => b.auctions.status === 'outbid').length;
+  const outbidCount = bids.filter(
+    (b) => b.amount !== b.auctions.current_price,
+  ).length;
   const endingSoonCount = urgentIds.size;
 
   const filtered = bids.filter((b) => {
-    if (filter === 'outbid') return b.auctions.status === 'outbid';
+    if (filter === 'outbid') return b.amount !== b.auctions.current_price;
     if (filter === 'ending-soon') return urgentIds.has(b.auction_id);
     return true;
   });

@@ -5,6 +5,8 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { FilterChip } from '../../../../components/ui/FitlerChip';
 import { BidsCarousel } from '../BidsCarousel';
 import { dashboardBids } from '@/lib/queries/auctions';
+import { Binoculars } from 'lucide-react';
+import { Subtitle } from '@/components/ui/typography';
 
 type Filter = 'all' | 'ending-soon';
 
@@ -74,7 +76,14 @@ export default function Watching({
         </div>
       </CardHeader>
       <CardContent>
-        <BidsCarousel bids={filtered} />
+        {watchlistAuctions.length > 0 ? (
+          <BidsCarousel bids={filtered} />
+        ) : (
+          <div className='flex flex-col gap-3 justify-center items-center h-82.5'>
+            <Binoculars />
+            <Subtitle>No bids on your watchlist!</Subtitle>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

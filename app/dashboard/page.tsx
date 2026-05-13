@@ -6,6 +6,7 @@ import MyListingsCollapsible from '@/app/dashboard/_components/MyListings/MyList
 import { createClient } from '@/lib/supabase/server';
 import {
   getActiveBids,
+  getAuctionsWon,
   getMyListings,
   getWachlist,
 } from '@/lib/queries/auctions';
@@ -22,14 +23,33 @@ export default async function DashboardPage() {
   const { data: activeBids } = await getActiveBids(user.id);
   const { data: watchlistAuctions } = await getWachlist(user.id);
   const { data: myListings } = await getMyListings(user.id);
-
-  if (!activeBids || !watchlistAuctions || !myListings) {
+  const { data: statsStripData } = await getAuctionsWon(user.id);
+  if (!activeBids || !watchlistAuctions || !myListings || !statsStripData) {
     toasts.fetchError('Failed to get dashboard info!');
     return;
   }
+  const { wonAuctions, recentlyWonAuctions, totalSpent, thisMonth } =
+    statsStripData;
+
   return (
     <div className='mx-16 my-10 flex flex-col justify-center'>
-      <StatsStrip />
+      <StatsStrip
+        wonAuctions={wonAuctions}
+        recentlyWonAuctions={recentlyWonAuctions}
+        totalSpent={totalSpent}
+        thisMonth={thisMonth}
+        activeBids={activeBids.length}
+        endingToday={
+          activeBids.filter((bid) => {
+            const today = new Date();
+            return (
+              new Date(bid.auctions.deadline).getUTCDate() ===
+              today.getUTCDate()
+            );
+          }).length
+        }
+        myListings={myListings}
+      />
       <ActiveBids bids={activeBids} />
       <div className='mt-10 grid grid-cols-1 gap-4 lg:grid-cols-3'>
         <div className='lg:col-span-2'>

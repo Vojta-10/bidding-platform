@@ -131,7 +131,67 @@ export async function getMyListings(userId: string): Promise<{
     .from('auctions')
     .select('id, title, current_price, deadline, status, bid_count')
     .eq('seller_id', userId)
+    .order('status')
     .order('deadline', { ascending: true });
   if (error) return { success: false, errorMessage: 'Something went wrong!' };
   return { success: true, data };
+}
+
+export async function getAuctionsWon(userId: string): Promise<{
+  success: boolean;
+  errorMessage?: string;
+  data?: {
+    wonAuctions: number;
+    recentlyWonAuctions: number;
+    totalSpent: number;
+    thisMonth: number;
+  };
+}> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from('auctions')
+    .select('deadline, current_price')
+    .eq('winner_id', userId);
+
+  if (error) return { success: false, errorMessage: 'Something went wrong!' };
+
+  const today = new Date();
+  const wonAuctions: number = data.length;
+  const recentlyWonAuctions = data.reduce(
+    (acc, row: { deadline: string; current_price: number }) => {
+      const auctionDate = new Date(row.deadline);
+      if (
+        today.getUTCMonth() === auctionDate.getUTCMonth() &&
+        today.getUTCFullYear() === auctionDate.getUTCFullYear()
+      ) {
+        acc++;
+      }
+      return acc;
+    },
+    0,
+  );
+  const { totalSpent, thisMonth } = data.reduce(
+    (
+      { totalSpent, thisMonth },
+      row: { deadline: string; current_price: number },
+    ) => {
+      totalSpent += row.current_price;
+      const auctionDate = new Date(row.deadline);
+
+      if (
+        today.getUTCMonth() === auctionDate.getUTCMonth() &&
+        today.getUTCFullYear() === auctionDate.getUTCFullYear()
+      ) {
+        thisMonth += row.current_price;
+      }
+      return { totalSpent, thisMonth };
+    },
+    { totalSpent: 0, thisMonth: 0 },
+  );
+
+  return {
+    success: true,
+    data: { wonAuctions, recentlyWonAuctions, totalSpent, thisMonth },
+  };
 }

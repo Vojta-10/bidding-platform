@@ -5,44 +5,66 @@ import {
   CardAction,
   CardContent,
 } from '@/components/ui/card';
+import { MyListingsType } from '@/lib/queries/auctions';
+import { calcTimeLeft, formatCurrency } from '@/lib/utils';
 import { Activity, Trophy, Tags, DollarSign } from 'lucide-react';
 
-const stats = [
-  {
-    label: 'Active Bids',
-    value: '4',
-    sub: '2 ending today',
-    Icon: Activity,
-    iconBg: 'bg-amber-500/10',
-    iconColor: 'text-amber-600',
-  },
-  {
-    label: 'Auctions Won',
-    value: '12',
-    sub: '3 this month',
-    Icon: Trophy,
-    iconBg: 'bg-green-500/10',
-    iconColor: 'text-green-600',
-  },
-  {
-    label: 'My Listings',
-    value: '2',
-    sub: '1 ending soon',
-    Icon: Tags,
-    iconBg: 'bg-blue-500/10',
-    iconColor: 'text-blue-600',
-  },
-  {
-    label: 'Total Spent',
-    value: '$4,500',
-    sub: '↑ $800 this month',
-    Icon: DollarSign,
-    iconBg: 'bg-violet-500/10',
-    iconColor: 'text-violet-600',
-  },
-];
+interface StatsStripProps {
+  wonAuctions: number;
+  recentlyWonAuctions: number;
+  totalSpent: number;
+  thisMonth: number;
+  activeBids: number;
+  endingToday: number;
+  myListings: MyListingsType[];
+}
 
-export default function StatsStrip() {
+export default function StatsStrip({
+  wonAuctions,
+  recentlyWonAuctions,
+  totalSpent,
+  thisMonth,
+  activeBids,
+  endingToday,
+  myListings,
+}: StatsStripProps) {
+  const myListingEndingSoonCount = myListings.filter((listing) => {
+    return calcTimeLeft(listing.deadline).urgent;
+  }).length;
+  const stats = [
+    {
+      label: 'Active Bids',
+      value: activeBids,
+      sub: `${endingToday} ending today`,
+      Icon: Activity,
+      iconBg: 'bg-amber-500/10',
+      iconColor: 'text-amber-600',
+    },
+    {
+      label: 'Auctions Won',
+      value: wonAuctions,
+      sub: `${recentlyWonAuctions} this month`,
+      Icon: Trophy,
+      iconBg: 'bg-green-500/10',
+      iconColor: 'text-green-600',
+    },
+    {
+      label: 'My Listings',
+      value: myListings.length,
+      sub: `${myListingEndingSoonCount} ending soon`,
+      Icon: Tags,
+      iconBg: 'bg-blue-500/10',
+      iconColor: 'text-blue-600',
+    },
+    {
+      label: 'Total Spent',
+      value: `${formatCurrency(totalSpent)}`,
+      sub: `↑ ${formatCurrency(thisMonth)} this month`,
+      Icon: DollarSign,
+      iconBg: 'bg-violet-500/10',
+      iconColor: 'text-violet-600',
+    },
+  ];
   return (
     <div className='grid grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-4'>
       {stats.map(({ label, value, sub, Icon, iconBg, iconColor }) => (
@@ -58,7 +80,9 @@ export default function StatsStrip() {
             </CardAction>
           </CardHeader>
           <CardContent>
-            <p className='text-xl font-bold tracking-tight sm:text-2xl lg:text-3xl'>{value}</p>
+            <p className='text-xl font-bold tracking-tight sm:text-2xl lg:text-3xl'>
+              {value}
+            </p>
             <p className='mt-1 text-xs text-muted-foreground'>{sub}</p>
           </CardContent>
         </Card>

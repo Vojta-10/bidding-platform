@@ -1,4 +1,4 @@
-export type ListingStatus = 'active' | 'sold' | 'closed';
+export type ListingStatus = 'active' | 'closed';
 
 export const statusConfig: Record<
   ListingStatus,
@@ -8,11 +8,6 @@ export const statusConfig: Record<
     label: 'Active',
     dot: 'bg-amber-500',
     pill: 'bg-amber-500/10 text-amber-700 dark:text-amber-400',
-  },
-  sold: {
-    label: 'Sold',
-    dot: 'bg-green-500',
-    pill: 'bg-green-500/10 text-green-700 dark:text-green-400',
   },
   closed: {
     label: 'Closed',

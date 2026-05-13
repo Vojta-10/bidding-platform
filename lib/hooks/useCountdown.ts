@@ -17,7 +17,12 @@ export function useCountdown(
   }, [onExpire]);
 
   useEffect(() => {
-    if (calcTimeLeft(deadline, extend).text === 'Ended') return;
+    if (calcTimeLeft(deadline, extend).text === 'Ended') {
+      if (onExpireRef.current) {
+        onExpireRef.current();
+      }
+      return;
+    }
 
     const id = setInterval(() => {
       const next = calcTimeLeft(deadline, extend);
