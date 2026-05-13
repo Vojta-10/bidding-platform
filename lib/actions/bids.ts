@@ -43,6 +43,8 @@ export async function placeBid({
     .limit(1)
     .single();
 
+  console.log(currentLeader, 'ahoj');
+
   if (currentLeader?.bidder_id === user.id)
     return { error: 'You are already leading this auction' };
   const p_auction_id = auction.id;

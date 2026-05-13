@@ -1,8 +1,15 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { type Listing } from '../types';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { ListingsTableBodyRow } from './ListingsTableBodyRow';
+import { MyListingsType } from '@/lib/queries/auctions';
 
-export function ListingsTable({ items }: { items: Listing[] }) {
+export function ListingsTable({ items }: { items: MyListingsType[] }) {
   return (
     <Table>
       <TableHeader>
@@ -30,7 +37,10 @@ export function ListingsTable({ items }: { items: Listing[] }) {
       {items.length === 0 ? (
         <TableBody>
           <TableRow>
-            <TableCell colSpan={6} className='py-10 text-center text-sm text-muted-foreground'>
+            <TableCell
+              colSpan={6}
+              className='py-10 text-center text-sm text-muted-foreground'
+            >
               No listings yet.
             </TableCell>
           </TableRow>

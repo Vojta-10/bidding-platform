@@ -1,25 +1,24 @@
 'use client';
 
 import Link from 'next/link';
-import { Clock, TrendingUp, Gavel } from 'lucide-react';
+import Image from 'next/image';
+import { Clock, TrendingUp, Gavel, ImageIcon, ExternalLink } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { buttonVariants } from '@/components/ui/button';
 import { cn, formatCurrency } from '@/lib/utils';
 import { useCountdown } from '@/lib/hooks/useCountdown';
+import { dashboardBids } from '@/lib/queries/auctions';
 
-export interface BidCardData {
-  id: string;
-  title: string;
-  imageGradient: string;
-  currentPrice: number;
-  yourBid?: number;
-  deadline: string;
-  status?: 'winning' | 'outbid';
-}
+export type BidCardType = dashboardBids & {
+  amount?: number;
+  auctions?: {
+    status?: string;
+  };
+};
 
-export function BidCard({ bid }: { bid: BidCardData }) {
-  const winning = bid.status === 'winning';
-  const timeLeft = useCountdown(bid.deadline);
+export function BidCard({ bid }: { bid: BidCardType }) {
+  const winning = bid.amount === bid.auctions.current_price;
+  const timeLeft = useCountdown(bid.auctions.deadline);
   const { urgent } = timeLeft;
 
   return (
@@ -29,7 +28,19 @@ export function BidCard({ bid }: { bid: BidCardData }) {
         urgent && 'ring-destructive/50',
       )}
     >
-      <div className={cn('relative h-36 w-full sm:h-44', bid.imageGradient)}>
+      <div className='relative h-36 w-full overflow-hidden sm:h-44'>
+        {bid.auctions.image_url ? (
+          <Image
+            src={bid.auctions.image_url}
+            alt={bid.auctions.title}
+            fill
+            className='object-cover'
+          />
+        ) : (
+          <div className='flex h-full w-full items-center justify-center bg-muted'>
+            <ImageIcon className='size-10 text-muted-foreground/20' />
+          </div>
+        )}
         {urgent && (
           <div className='absolute left-2.5 top-2.5 flex items-center gap-1.5 rounded-full bg-black/50 px-2 py-1 backdrop-blur-sm'>
             <span className='relative flex size-2 shrink-0'>
@@ -45,14 +56,14 @@ export function BidCard({ bid }: { bid: BidCardData }) {
 
       <CardContent className='flex flex-col gap-2 p-2.5 sm:gap-3 sm:p-3'>
         <p className='line-clamp-2 h-10 text-sm font-medium leading-snug'>
-          {bid.title}
+          {bid.auctions.title}
         </p>
 
         <div className='flex items-end justify-between'>
           <div>
             <p className='text-xs text-muted-foreground'>Current</p>
             <p className='text-sm font-bold tabular-nums sm:text-base'>
-              {formatCurrency(bid.currentPrice)}
+              {formatCurrency(bid.auctions.current_price)}
             </p>
           </div>
           <div className='flex flex-col items-end gap-0.5'>
@@ -70,16 +81,16 @@ export function BidCard({ bid }: { bid: BidCardData }) {
                 {timeLeft.text}
               </span>
             </div>
-            {bid.yourBid !== undefined && (
+            {bid.amount !== undefined && (
               <p className='text-xs text-muted-foreground'>
-                Your bid: {formatCurrency(bid.yourBid)}
+                Your bid: {formatCurrency(bid.amount)}
               </p>
             )}
           </div>
         </div>
 
         <div className='flex items-center justify-between'>
-          {bid.status !== undefined ? (
+          {bid.auctions.status !== undefined ? (
             <>
               <span
                 className={cn(
@@ -97,19 +108,23 @@ export function BidCard({ bid }: { bid: BidCardData }) {
                 />
                 {winning ? 'Winning' : 'Outbid'}
               </span>
-              {!winning && (
-                <Link
-                  href={`/auctions/${bid.id}`}
-                  className={cn(buttonVariants({ size: 'xs' }), 'gap-1')}
-                >
-                  <TrendingUp className='size-3' />
-                  Raise Bid
-                </Link>
-              )}
+              <Link
+                href={`/auctions/${bid.auction_id}`}
+                className={cn(buttonVariants({ size: 'xs', variant: winning ? 'ghost' : 'default' }), 'gap-1')}
+              >
+                {winning ? (
+                  <ExternalLink className='size-3' />
+                ) : (
+                  <>
+                    <TrendingUp className='size-3' />
+                    Raise Bid
+                  </>
+                )}
+              </Link>
             </>
           ) : (
             <Link
-              href={`/auctions/${bid.id}`}
+              href={`/auctions/${bid.auction_id}`}
               className={cn(buttonVariants({ size: 'xs' }), 'gap-1')}
             >
               <Gavel className='size-3' />

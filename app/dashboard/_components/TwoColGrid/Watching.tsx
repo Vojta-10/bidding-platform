@@ -4,70 +4,25 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { FilterChip } from '../../../../components/ui/FitlerChip';
 import { BidsCarousel } from '../BidsCarousel';
-import type { BidCardData } from '../BidCard';
+import { dashboardBids } from '@/lib/queries/auctions';
 
 type Filter = 'all' | 'ending-soon';
 
-const MOCK_WATCHING: BidCardData[] = [
-  {
-    id: 'w1',
-    title: 'Apple Vision Pro 256GB',
-    imageGradient: 'bg-gradient-to-br from-slate-400 to-slate-600',
-    currentPrice: 3200,
-    deadline: new Date(Date.now() + 5 * 3600000).toISOString(),
-  },
-  {
-    id: 'w2',
-    title: 'Dyson Zone Absolute+ Headphones',
-    imageGradient: 'bg-gradient-to-br from-purple-700 to-purple-950',
-    currentPrice: 650,
-    deadline: new Date(Date.now() + 22 * 3600000).toISOString(),
-  },
-  {
-    id: 'w3',
-    title: 'DJI Mavic 3 Pro Cine Premium Combo',
-    imageGradient: 'bg-gradient-to-br from-gray-500 to-gray-800',
-    currentPrice: 2100,
-    deadline: new Date(Date.now() + 38 * 60000).toISOString(),
-  },
-  {
-    id: 'w4',
-    title: 'Omega Speedmaster Professional Moonwatch',
-    imageGradient: 'bg-gradient-to-br from-zinc-600 to-zinc-900',
-    currentPrice: 5400,
-    deadline: new Date(Date.now() + 3 * 86400000).toISOString(),
-  },
-  {
-    id: 'w5',
-    title: 'Hasselblad X2D 100C Medium Format Camera',
-    imageGradient: 'bg-gradient-to-br from-stone-600 to-stone-900',
-    currentPrice: 7800,
-    deadline: new Date(Date.now() + 12 * 3600000).toISOString(),
-  },
-  {
-    id: 'w6',
-    title: 'Ferrari F40 Scale Model 1:8 Amalgam Collection',
-    imageGradient: 'bg-gradient-to-br from-red-600 to-red-950',
-    currentPrice: 1150,
-    deadline: new Date(Date.now() + 48 * 3600000).toISOString(),
-  },
-  {
-    id: 'w7',
-    title: 'Leica Q3 43 Full-Frame Compact',
-    imageGradient: 'bg-gradient-to-br from-neutral-600 to-neutral-900',
-    currentPrice: 6200,
-    deadline: new Date(Date.now() + 9 * 3600000).toISOString(),
-  },
-];
-
-export default function Watching() {
+export default function Watching({
+  watchlistAuctions,
+}: {
+  watchlistAuctions: dashboardBids[];
+}) {
   const [filter, setFilter] = useState<Filter>('all');
   const [urgentIds] = useState(
     () =>
       new Set(
-        MOCK_WATCHING.filter(
-          (b) => new Date(b.deadline).getTime() < Date.now() + 3_600_000,
-        ).map((b) => b.id),
+        watchlistAuctions
+          .filter(
+            (b) =>
+              new Date(b.auctions.deadline).getTime() < Date.now() + 3_600_000,
+          )
+          .map((b) => b.auction_id),
       ),
   );
 
@@ -81,7 +36,7 @@ export default function Watching() {
     {
       id: 'all',
       label: 'All',
-      count: MOCK_WATCHING.length,
+      count: watchlistAuctions.length,
       bgColor: 'bg-primary text-background',
     },
     {
@@ -95,8 +50,8 @@ export default function Watching() {
 
   const filtered =
     filter === 'ending-soon'
-      ? MOCK_WATCHING.filter((b) => urgentIds.has(b.id))
-      : MOCK_WATCHING;
+      ? watchlistAuctions.filter((b) => urgentIds.has(b.auction_id))
+      : watchlistAuctions;
 
   return (
     <Card>

@@ -1,11 +1,11 @@
 'use client';
 
 import { TableBody } from '@/components/ui/table';
-import { type Listing } from '../types';
 import TableListing from './ListingsTableListing';
+import { MyListingsType } from '@/lib/queries/auctions';
 
 interface ListingsTableBodyRowProps {
-  items: Listing[];
+  items: MyListingsType[];
 }
 
 export function ListingsTableBodyRow({ items }: ListingsTableBodyRowProps) {

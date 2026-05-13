@@ -1,4 +1,5 @@
 'use client';
+import { toasts } from '@/components/shared/toast';
 import { Button } from '@/components/ui/button';
 import { addToWatchlist, removeFromWatchlist } from '@/lib/actions/watchlist';
 import { Binoculars } from 'lucide-react';
@@ -54,6 +55,8 @@ export function AuctionMeta({
               toast.error(res.errorMessage);
               return;
             }
+            if (watched) toasts.watchRemoved();
+            else toasts.watchAdded();
             setWatched(!watched);
           }}
         >

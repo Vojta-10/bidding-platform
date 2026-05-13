@@ -1,17 +1,19 @@
 'use client';
 
 import { TableCell, TableRow } from '@/components/ui/table';
-import { Listing, statusConfig } from '../types';
+import { ListingStatus, statusConfig } from '../types';
 import { cn, formatCurrency } from '@/lib/utils';
 import { useCountdown } from '@/lib/hooks/useCountdown';
 import { ExternalLink, Gavel } from 'lucide-react';
 import Link from 'next/link';
+import { MyListingsType } from '@/lib/queries/auctions';
 interface TableListingProps {
-  listing: Listing;
+  listing: MyListingsType;
 }
 
 export default function TableListing({ listing }: TableListingProps) {
-  const { label, dot, pill } = statusConfig[listing.status];
+  const { label, dot, pill } =
+    statusConfig[listing.status as ListingStatus] ?? statusConfig.closed;
   const timeLeft = useCountdown(listing.deadline);
 
   return (
@@ -36,14 +38,14 @@ export default function TableListing({ listing }: TableListingProps) {
 
       <TableCell>
         <span className='ml-1 font-mono text-sm font-semibold tabular-nums'>
-          {formatCurrency(listing.currentPrice)}
+          {formatCurrency(listing.current_price ?? 0)}
         </span>
       </TableCell>
 
       <TableCell>
         <span className='flex items-center gap-1.5 text-sm text-muted-foreground'>
           <Gavel className='size-3 shrink-0' />
-          {listing.bids}
+          {listing.bid_count}
         </span>
       </TableCell>
 

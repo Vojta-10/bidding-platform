@@ -9,19 +9,22 @@ import {
 } from '@/components/ui/collapsible';
 import { usePagination } from '@/lib/hooks/usePagination';
 import { ChevronDown } from 'lucide-react';
-import { MOCK_LISTINGS } from './types';
 import { ListingsTable } from './ListingsTable/ListingsTable';
 import { ListingsPagination } from './ListingsPagination';
+import { MyListingsType } from '@/lib/queries/auctions';
 
-export default function MyListingsCollapsible() {
-  const listings = MOCK_LISTINGS;
-  const activeCount = listings.filter((l) => l.status === 'active').length;
+export default function MyListingsCollapsible({
+  myListings,
+}: {
+  myListings: MyListingsType[];
+}) {
+  const activeCount = myListings.filter((l) => l.status === 'active').length;
 
   const { page, pageSize, totalPages, setPage, changePageSize } = usePagination(
-    listings.length,
+    myListings.length,
     5,
   );
-  const currentItems = listings.slice((page - 1) * pageSize, page * pageSize);
+  const currentItems = myListings.slice((page - 1) * pageSize, page * pageSize);
 
   const cardRef = useRef<HTMLDivElement>(null);
   const prevPage = useRef(page);
@@ -58,7 +61,7 @@ export default function MyListingsCollapsible() {
                 currentPage={page}
                 totalPages={totalPages}
                 pageSize={pageSize}
-                totalItems={listings.length}
+                totalItems={myListings.length}
                 onPageChange={setPage}
                 onPageSizeChange={changePageSize}
               />

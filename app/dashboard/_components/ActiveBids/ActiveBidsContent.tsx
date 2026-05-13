@@ -6,12 +6,12 @@ import { Gavel } from 'lucide-react';
 import { CardContent, CardHeader } from '@/components/ui/card';
 import { FilterChip } from '../../../../components/ui/FitlerChip';
 import { BidsCarousel } from '@/app/dashboard/_components/BidsCarousel';
-import type { BidCardData } from '@/app/dashboard/_components/BidCard';
+import { activeBidsType } from '@/lib/queries/auctions';
 
 type Filter = 'all' | 'outbid' | 'ending-soon';
 
 interface ActiveBidsContentProps {
-  bids: BidCardData[];
+  bids: activeBidsType[];
 }
 
 export function ActiveBidsContent({ bids }: ActiveBidsContentProps) {
@@ -21,17 +21,17 @@ export function ActiveBidsContent({ bids }: ActiveBidsContentProps) {
     const threshold = Date.now() + 3_600_000;
     return new Set(
       bids
-        .filter((b) => new Date(b.deadline).getTime() < threshold)
-        .map((b) => b.id),
+        .filter((b) => new Date(b.auctions.deadline).getTime() < threshold)
+        .map((b) => b.auction_id),
     );
   });
 
-  const outbidCount = bids.filter((b) => b.status === 'outbid').length;
+  const outbidCount = bids.filter((b) => b.auctions.status === 'outbid').length;
   const endingSoonCount = urgentIds.size;
 
   const filtered = bids.filter((b) => {
-    if (filter === 'outbid') return b.status === 'outbid';
-    if (filter === 'ending-soon') return urgentIds.has(b.id);
+    if (filter === 'outbid') return b.auctions.status === 'outbid';
+    if (filter === 'ending-soon') return urgentIds.has(b.auction_id);
     return true;
   });
 

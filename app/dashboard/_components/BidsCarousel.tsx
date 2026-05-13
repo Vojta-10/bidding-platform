@@ -3,11 +3,12 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { BidCard, type BidCardData } from './BidCard';
+import { BidCard } from './BidCard';
+import { dashboardBids } from '@/lib/queries/auctions';
 
 const SCROLL_STEP = 272; // w-64 (256) + gap-4 (16)
 
-export function BidsCarousel({ bids }: { bids: BidCardData[] }) {
+export function BidsCarousel({ bids }: { bids: dashboardBids[] }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -91,7 +92,7 @@ export function BidsCarousel({ bids }: { bids: BidCardData[] }) {
           className='flex gap-4 overflow-x-auto px-2 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'
         >
           {bids.map((bid) => (
-            <BidCard key={bid.id} bid={bid} />
+            <BidCard key={bid.auction_id} bid={bid} />
           ))}
         </div>
       </div>
