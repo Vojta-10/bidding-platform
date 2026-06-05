@@ -28,10 +28,10 @@ export function useCountdown(
       const next = calcTimeLeft(deadline, extend);
       setTimeLeft(next);
       if (next.text === 'Ended') {
-        clearInterval(id);
         if (onExpireRef.current) {
           onExpireRef.current();
         }
+        clearInterval(id);
       }
     }, 1000);
 

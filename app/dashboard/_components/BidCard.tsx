@@ -24,7 +24,7 @@ export function BidCard({ bid }: { bid: BidCardType }) {
   return (
     <Card
       className={cn(
-        'w-52 shrink-0 gap-0 overflow-hidden py-0 transition-all hover:shadow-md sm:w-64',
+        'w-52 shrink-0 gap-0 overflow-hidden py-0 my-1 transition-all hover:shadow-md sm:w-64',
         urgent && 'ring-destructive/50',
       )}
     >

@@ -7,6 +7,8 @@ import { BidsCarousel } from '../BidsCarousel';
 import { dashboardBids } from '@/lib/queries/auctions';
 import { Binoculars } from 'lucide-react';
 import { Subtitle } from '@/components/ui/typography';
+import { Separator } from '@/components/ui/separator';
+
 
 type Filter = 'all' | 'ending-soon';
 
@@ -75,6 +77,7 @@ export default function Watching({
           </div>
         </div>
       </CardHeader>
+      <Separator />
       <CardContent>
         {watchlistAuctions.length > 0 ? (
           <BidsCarousel bids={filtered} />

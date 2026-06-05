@@ -31,6 +31,12 @@ export default function StatsStrip({
   const myListingEndingSoonCount = myListings.filter((listing) => {
     return calcTimeLeft(listing.deadline).urgent;
   }).length;
+
+  const myListingActiveCount = myListings.filter((listing) => {
+    return listing.status === 'active';
+  }).length;
+  const myListingEndedCount = myListings.length - myListingActiveCount;
+
   const stats = [
     {
       label: 'Active Bids',
@@ -50,8 +56,9 @@ export default function StatsStrip({
     },
     {
       label: 'My Listings',
-      value: myListings.length,
+      value: myListingActiveCount,
       sub: `${myListingEndingSoonCount} ending soon`,
+      ended: `${myListingEndedCount} ended`,
       Icon: Tags,
       iconBg: 'bg-blue-500/10',
       iconColor: 'text-blue-600',
@@ -67,7 +74,7 @@ export default function StatsStrip({
   ];
   return (
     <div className='grid grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-4'>
-      {stats.map(({ label, value, sub, Icon, iconBg, iconColor }) => (
+      {stats.map(({ label, value, sub, Icon, iconBg, iconColor, ended }) => (
         <Card key={label}>
           <CardHeader>
             <CardTitle className='text-sm font-medium text-muted-foreground sm:text-base'>
@@ -83,7 +90,14 @@ export default function StatsStrip({
             <p className='text-xl font-bold tracking-tight sm:text-2xl lg:text-3xl'>
               {value}
             </p>
-            <p className='mt-1 text-xs text-muted-foreground'>{sub}</p>
+            {ended ? (
+              <div className='mt-1 flex justify-between'>
+                <p className='mt-1 text-xs text-muted-foreground'>{sub}</p>
+                <p className='mt-1 text-xs text-muted-foreground'>{ended}</p>
+              </div>
+            ) : (
+              <p className='mt-2 text-xs text-muted-foreground'>{sub}</p>
+            )}
           </CardContent>
         </Card>
       ))}

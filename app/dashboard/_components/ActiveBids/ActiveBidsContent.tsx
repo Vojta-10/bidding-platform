@@ -7,6 +7,7 @@ import { CardContent, CardHeader } from '@/components/ui/card';
 import { FilterChip } from '../../../../components/ui/FitlerChip';
 import { BidsCarousel } from '@/app/dashboard/_components/BidsCarousel';
 import { activeBidsType } from '@/lib/queries/auctions';
+import { Separator } from '@/components/ui/separator';
 
 type Filter = 'all' | 'outbid' | 'ending-soon';
 
@@ -95,10 +96,10 @@ export function ActiveBidsContent({ bids }: ActiveBidsContentProps) {
           </div>
         </div>
       </CardHeader>
-
+      <Separator />
       <CardContent>
         {filtered.length === 0 ? (
-          <div className='flex h-48 flex-col items-center justify-center gap-3 rounded-lg border border-dashed text-muted-foreground'>
+          <div className='flex h-48 flex-col items-center justify-center gap-3 rounded-lg text-muted-foreground'>
             <Gavel className='size-8 opacity-30' />
             <div className='text-center'>
               {bids.length === 0 ? (

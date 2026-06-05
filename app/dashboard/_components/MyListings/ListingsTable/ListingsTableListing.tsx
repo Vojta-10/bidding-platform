@@ -7,14 +7,17 @@ import { useCountdown } from '@/lib/hooks/useCountdown';
 import { ExternalLink, Gavel } from 'lucide-react';
 import Link from 'next/link';
 import { MyListingsType } from '@/lib/queries/auctions';
+import { closeSpecificAuction } from '@/lib/actions/closeAuction';
 interface TableListingProps {
   listing: MyListingsType;
 }
 
 export default function TableListing({ listing }: TableListingProps) {
+  const timeLeft = useCountdown(listing.deadline, false, async () => {
+    await closeSpecificAuction(listing.id);
+  });
   const { label, dot, pill } =
     statusConfig[listing.status as ListingStatus] ?? statusConfig.closed;
-  const timeLeft = useCountdown(listing.deadline);
 
   return (
     <TableRow className='group/row'>

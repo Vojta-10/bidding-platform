@@ -24,7 +24,6 @@ interface ListingsPaginationProps {
   onPageSizeChange: (size: number) => void;
 }
 
-
 export function ListingsPagination({
   currentPage,
   totalPages,
@@ -117,7 +116,7 @@ export function ListingsPagination({
         )}
       </div>
       <Link
-        href='/listings/new'
+        href='/auctions/new'
         className='inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline justify-self-center lg:justify-self-end'
       >
         <Plus className='size-3' />

@@ -14,7 +14,7 @@ export function ListingsTable({ items }: { items: MyListingsType[] }) {
     <Table>
       <TableHeader>
         <TableRow className='hover:bg-transparent'>
-          <TableHead className='pl-5 text-xs font-semibold uppercase tracking-wider text-muted-foreground'>
+          <TableHead className='pl-5 text-xs font-semibold uppercase tracking-wider text-muted-foreground w-1/3'>
             Title
           </TableHead>
           <TableHead className='text-xs font-semibold uppercase tracking-wider text-muted-foreground'>

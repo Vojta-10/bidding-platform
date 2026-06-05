@@ -14,7 +14,7 @@ import { Subtitle } from '@/components/ui/typography';
 import { bidsType } from '@/lib/queries/auctions';
 import { useRealtimeAuction } from '@/lib/hooks/useRealtimeAuction';
 import { useRealtimeBids } from '@/lib/hooks/useRealtimeBids';
-import { closeAuction } from '@/lib/actions/closeAuction';
+import { closeSpecificAuction } from '@/lib/actions/closeAuction';
 
 interface BidPanelProps {
   initialPrice: number;
@@ -72,7 +72,7 @@ export function BidPanel({
             <CountdownTimer
               deadline={deadline}
               onExpire={async () => {
-                await closeAuction();
+                await closeSpecificAuction(auction.id);
                 router.refresh();
               }}
             />
