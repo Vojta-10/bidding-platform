@@ -22,6 +22,7 @@ import { cn } from '@/lib/utils';
 import { signOut } from '@/lib/actions/auth';
 import type { User } from '@supabase/supabase-js';
 import type { Profile } from '@/types/database';
+import { usePathname } from 'next/navigation';
 
 interface NavbarMobileProps {
   user: User | null;
@@ -30,6 +31,7 @@ interface NavbarMobileProps {
 
 export function NavbarMobile({ user, profile }: NavbarMobileProps) {
   const [open, setOpen] = useState(false);
+  const path = usePathname();
 
   const initial =
     profile?.username?.[0]?.toUpperCase() ??
@@ -61,7 +63,7 @@ export function NavbarMobile({ user, profile }: NavbarMobileProps) {
             <div className='relative'>
               <Search className='absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none' />
               <input
-                name='q'
+                name='query'
                 type='search'
                 placeholder='Search auctions...'
                 className='w-full rounded-lg border border-input bg-muted/40 py-2 pl-9 pr-4 text-sm outline-none focus:border-ring focus:bg-background focus:ring-2 focus:ring-ring/20 transition-all placeholder:text-muted-foreground'
@@ -82,14 +84,14 @@ export function NavbarMobile({ user, profile }: NavbarMobileProps) {
             Browse All
           </SheetClose>
           <SheetClose
-            render={<Link href='/auctions?filter=live' />}
+            render={<Link href='/auctions?statusOption=active' />}
             nativeButton={false}
             className='flex items-center gap-2.5 rounded-md px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors'
           >
             Live Now
           </SheetClose>
           <SheetClose
-            render={<Link href='/auctions?filter=ending' />}
+            render={<Link href='/auctions?deadline=today' />}
             nativeButton={false}
             className='flex items-center gap-2.5 rounded-md px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors'
           >
@@ -144,7 +146,7 @@ export function NavbarMobile({ user, profile }: NavbarMobileProps) {
                 My Listings
               </SheetClose>
               <SheetClose
-                render={<button onClick={() => signOut()} />}
+                render={<button onClick={() => signOut(path)} />}
                 className='flex items-center gap-2.5 rounded-md px-3 py-2 text-sm text-destructive hover:bg-destructive/10 transition-colors w-full text-left'
               >
                 <LogOut className='size-4' />

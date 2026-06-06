@@ -12,6 +12,17 @@ export type bidsType = {
   };
 };
 
+export type BrowseBids = {
+  id: string;
+  image_url: string | null;
+  current_price: number;
+  deadline: string;
+  status: string;
+  bid_count: number;
+  title: string;
+  description: string;
+};
+
 export type MyListingsType = {
   id: string;
   title: string;
@@ -43,6 +54,73 @@ export type auctionType = Auction & {
     username: string;
   };
 };
+
+export type filterType = {
+  query: string;
+  statusOption: string;
+  priceMin: string;
+  priceMax: string;
+  deadline: string;
+};
+
+export type sortType = {
+  type: string;
+  ascending: string;
+};
+
+export async function getAuctions(
+  filter: filterType,
+  sort: sortType,
+): Promise<BrowseBids[]> {
+  const supabase = await createClient();
+  let query = supabase
+    .from('auctions')
+    .select(
+      'id, image_url, current_price, deadline, status, bid_count, title, description',
+    );
+
+  if (filter.query !== '') {
+    query = query.ilike('title', `%${filter.query}%`);
+  }
+
+  if (filter.statusOption !== 'all') {
+    query = query.eq('status', filter.statusOption);
+  }
+
+  if (filter.priceMin !== '') {
+    query = query.gte('current_price', Number(filter.priceMin));
+  }
+
+  if (filter.priceMax !== '') {
+    query = query.lte('current_price', Number(filter.priceMax));
+  }
+
+  if (filter.deadline !== 'any') {
+    let multiplicator;
+    if (filter.deadline === 'today') {
+      multiplicator = 24;
+    } else {
+      multiplicator = 7 * 24;
+    }
+    query = query.lte(
+      'deadline',
+      new Date(Date.now() + multiplicator * 3600000).toISOString(),
+    );
+  }
+
+  query = query.order(`${sort.type}`, {
+    ascending: sort.ascending === 'true' ? true : false,
+  });
+
+  const { data, error } = await query;
+
+  if (error) {
+    console.log(error);
+    redirect('/auctions?failedFetch=true');
+  }
+
+  return data;
+}
 
 export async function getAuction(
   auctionId: string,
