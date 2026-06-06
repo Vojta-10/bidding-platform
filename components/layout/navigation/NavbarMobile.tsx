@@ -83,13 +83,7 @@ export function NavbarMobile({ user, profile }: NavbarMobileProps) {
           >
             Browse All
           </SheetClose>
-          <SheetClose
-            render={<Link href='/auctions?statusOption=active' />}
-            nativeButton={false}
-            className='flex items-center gap-2.5 rounded-md px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors'
-          >
-            Live Now
-          </SheetClose>
+
           <SheetClose
             render={<Link href='/auctions?deadline=today' />}
             nativeButton={false}

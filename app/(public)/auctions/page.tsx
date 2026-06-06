@@ -16,19 +16,10 @@ export default async function AuctionsPage({
     failedFetch?: string;
   }>;
 }) {
-  const {
-    query,
-    statusOption,
-    priceMin,
-    priceMax,
-    deadline,
-    type,
-    ascending,
-    failedFetch,
-  } = await searchParams;
+  const { query, priceMin, priceMax, deadline, type, ascending, failedFetch } =
+    await searchParams;
   const filter = {
     query: query || '',
-    statusOption: statusOption || 'all',
     priceMin: priceMin || '',
     priceMax: priceMax || '',
     deadline: deadline || 'any',

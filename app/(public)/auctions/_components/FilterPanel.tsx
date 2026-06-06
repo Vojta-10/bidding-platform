@@ -9,29 +9,21 @@ import {
 import { Search, ChevronDown, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { filterType } from '@/lib/queries/auctions';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 
-export type StatusFilter = 'all' | 'active' | 'closed';
 export type DeadlineFilter = 'any' | 'today' | 'week' | 'ended';
 
 export interface Filters {
   search: string;
-  status: StatusFilter;
   priceMin: string;
   priceMax: string;
   deadline: DeadlineFilter;
 }
 
-export const DEFAULT_FILTERS: Filters = {
-  search: '',
-  status: 'all',
-  priceMin: '',
-  priceMax: '',
-  deadline: 'any',
-};
+//
 
 function FilterSection({
   title,
@@ -60,16 +52,27 @@ export function FilterPanel() {
 
   const [filter, setFilter] = useState<filterType>({
     query: searchParams.get('query') || '',
-    statusOption: searchParams.get('statusOption') || 'all',
     priceMin: searchParams.get('priceMin') || '',
     priceMax: searchParams.get('priceMax') || '',
     deadline: searchParams.get('deadline') || 'any',
   });
 
+  useEffect(() => {
+    const filterAdjust = () => {
+      setFilter({
+        query: searchParams.get('query') || '',
+        priceMin: searchParams.get('priceMin') || '',
+        priceMax: searchParams.get('priceMax') || '',
+        deadline: searchParams.get('deadline') || 'any',
+      });
+    };
+
+    filterAdjust();
+  }, [searchParams]);
+
   const resetFilters = () => {
     setFilter({
       query: '',
-      statusOption: 'all',
       priceMin: '',
       priceMax: '',
       deadline: 'any',
@@ -80,20 +83,12 @@ export function FilterPanel() {
   const hasActiveFilters =
     searchParams.get('query') !== null ||
     filter.query !== '' ||
-    searchParams.get('statusOption') !== null ||
-    filter.statusOption !== 'all' ||
     searchParams.get('priceMin') !== null ||
     filter.priceMin !== '' ||
     searchParams.get('priceMax') !== null ||
     filter.priceMax !== '' ||
     searchParams.get('deadline') !== null ||
     filter.deadline !== 'any';
-
-  const statusOptions: { value: StatusFilter; label: string }[] = [
-    { value: 'all', label: 'All' },
-    { value: 'active', label: 'Active' },
-    { value: 'closed', label: 'Ended' },
-  ];
 
   const deadlineOptions: { value: DeadlineFilter; label: string }[] = [
     { value: 'any', label: 'Any time' },
@@ -133,32 +128,6 @@ export function FilterPanel() {
             }}
             className='pl-8 h-8 text-xs'
           />
-        </div>
-      </FilterSection>
-
-      <div className='h-px bg-border mx-1' />
-
-      <FilterSection title='Status'>
-        <div className='flex flex-wrap gap-1.5'>
-          {statusOptions.map((opt) => (
-            <button
-              key={opt.value}
-              onClick={() => {
-                setFilter({
-                  ...filter,
-                  statusOption: opt.value,
-                });
-              }}
-              className={cn(
-                'rounded-full px-3 py-1 text-xs font-medium transition-colors',
-                filter.statusOption === opt.value
-                  ? 'bg-primary text-primary-foreground'
-                  : 'bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80',
-              )}
-            >
-              {opt.label}
-            </button>
-          ))}
         </div>
       </FilterSection>
 
@@ -236,8 +205,6 @@ export function FilterPanel() {
         onClick={() => {
           const params = new URLSearchParams();
           if (filter.query !== '') params.set('query', filter.query);
-          if (filter.statusOption !== 'all')
-            params.set('statusOption', filter.statusOption);
           if (filter.priceMin !== '') params.set('priceMin', filter.priceMin);
           if (filter.priceMax !== '') params.set('priceMax', filter.priceMax);
           if (filter.deadline !== 'any')

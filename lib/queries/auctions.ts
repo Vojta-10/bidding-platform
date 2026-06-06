@@ -57,7 +57,6 @@ export type auctionType = Auction & {
 
 export type filterType = {
   query: string;
-  statusOption: string;
   priceMin: string;
   priceMax: string;
   deadline: string;
@@ -78,13 +77,8 @@ export async function getAuctions(
     .select(
       'id, image_url, current_price, deadline, status, bid_count, title, description',
     );
-
   if (filter.query !== '') {
     query = query.ilike('title', `%${filter.query}%`);
-  }
-
-  if (filter.statusOption !== 'all') {
-    query = query.eq('status', filter.statusOption);
   }
 
   if (filter.priceMin !== '') {
@@ -96,16 +90,24 @@ export async function getAuctions(
   }
 
   if (filter.deadline !== 'any') {
-    let multiplicator;
-    if (filter.deadline === 'today') {
-      multiplicator = 24;
+    if (filter.deadline === 'ended') {
+      query = query.eq('status', 'closed');
     } else {
-      multiplicator = 7 * 24;
+      let multiplicator;
+      if (filter.deadline === 'today') {
+        multiplicator = 24;
+      } else {
+        multiplicator = 7 * 24;
+      }
+      query = query
+        .lte(
+          'deadline',
+          new Date(Date.now() + multiplicator * 3600000).toISOString(),
+        )
+        .eq('status', 'active');
     }
-    query = query.lte(
-      'deadline',
-      new Date(Date.now() + multiplicator * 3600000).toISOString(),
-    );
+  } else {
+    query = query.eq('status', 'active');
   }
 
   query = query.order(`${sort.type}`, {

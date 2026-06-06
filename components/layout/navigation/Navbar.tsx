@@ -38,12 +38,7 @@ export default async function Navbar() {
           >
             Browse
           </Link>
-          <Link
-            href='/auctions?statusOption=active'
-            className='rounded-md px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors'
-          >
-            Live Now
-          </Link>
+
           <Link
             href='/auctions?deadline=today'
             className='rounded-md px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors'
