@@ -1,4 +1,4 @@
-import ActiveBids from '@/app/dashboard/_components/ActiveBids/ActiveBids';
+import BidsSummary from '@/app/dashboard/_components/BidsSummary/BidsSummary';
 import StatsStrip from '@/app/dashboard/_components/StatsStrip';
 import Watching from '@/app/dashboard/_components/TwoColGrid/Watching';
 import RecentActivity from '@/app/dashboard/_components/TwoColGrid/RecentActivity';
@@ -50,7 +50,7 @@ export default async function DashboardPage() {
         }
         myListings={myListings}
       />
-      <ActiveBids bids={activeBids} />
+      <BidsSummary bids={activeBids.slice(0, 5)} />
       <div className='mt-10 grid grid-cols-1 gap-4 lg:grid-cols-3'>
         <div className='lg:col-span-2'>
           <Watching watchlistAuctions={watchlistAuctions} />

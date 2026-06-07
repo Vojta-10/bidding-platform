@@ -11,20 +11,29 @@ import { dashboardBids } from '@/lib/queries/auctions';
 
 export type BidCardType = dashboardBids & {
   amount?: number;
+  won?: boolean;
   auctions?: {
     status?: string;
   };
 };
 
-export function BidCard({ bid }: { bid: BidCardType }) {
+export function BidCard({
+  bid,
+  variant = 'carousel',
+}: {
+  bid: BidCardType;
+  variant?: 'carousel' | 'grid';
+}) {
   const winning = bid.amount === bid.auctions.current_price;
+  const closed = bid.auctions.status === 'closed';
   const timeLeft = useCountdown(bid.auctions.deadline);
   const { urgent } = timeLeft;
 
   return (
     <Card
       className={cn(
-        'w-52 shrink-0 gap-0 overflow-hidden py-0 my-1 transition-all hover:shadow-md sm:w-64',
+        'gap-0 overflow-hidden py-0 my-1 transition-all hover:shadow-md',
+        variant === 'grid' ? 'w-full' : 'w-52 shrink-0 sm:w-64',
         urgent && 'ring-destructive/50',
       )}
     >
@@ -90,7 +99,41 @@ export function BidCard({ bid }: { bid: BidCardType }) {
         </div>
 
         <div className='flex items-center justify-between'>
-          {bid.auctions.status !== undefined ? (
+          {bid.auctions.status === undefined ? (
+            <Link
+              href={`/auctions/${bid.auction_id}`}
+              className={cn(buttonVariants({ size: 'xs' }), 'gap-1')}
+            >
+              <Gavel className='size-3' />
+              Place Bid
+            </Link>
+          ) : closed ? (
+            <>
+              <span
+                className={cn(
+                  'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium',
+                  bid.won
+                    ? 'bg-green-500/10 text-green-700 dark:text-green-400'
+                    : 'bg-destructive/10 text-destructive',
+                )}
+              >
+                <span
+                  className={cn(
+                    'size-1.5 rounded-full',
+                    bid.won ? 'bg-green-500' : 'bg-destructive',
+                  )}
+                />
+                {bid.won ? 'Won' : 'Lost'}
+              </span>
+              <Link
+                href={`/auctions/${bid.auction_id}`}
+                className={cn(buttonVariants({ size: 'xs', variant: 'ghost' }), 'gap-1')}
+              >
+                <ExternalLink className='size-3' />
+                View
+              </Link>
+            </>
+          ) : (
             <>
               <span
                 className={cn(
@@ -122,14 +165,6 @@ export function BidCard({ bid }: { bid: BidCardType }) {
                 )}
               </Link>
             </>
-          ) : (
-            <Link
-              href={`/auctions/${bid.auction_id}`}
-              className={cn(buttonVariants({ size: 'xs' }), 'gap-1')}
-            >
-              <Gavel className='size-3' />
-              Place Bid
-            </Link>
           )}
         </div>
       </CardContent>

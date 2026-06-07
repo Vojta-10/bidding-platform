@@ -49,6 +49,14 @@ export type activeBidsType = dashboardBids & {
   };
 };
 
+export type historyBidsType = dashboardBids & {
+  amount: number;
+  won: boolean;
+  auctions: {
+    status: string;
+  };
+};
+
 export type auctionType = Auction & {
   profiles: {
     username: string;
@@ -181,6 +189,42 @@ export async function getActiveBids(userId: string): Promise<{
     }
   });
   return { success: true, data: [...uniqueBids] };
+}
+
+export async function getHistoryBids(userId: string): Promise<{
+  success: boolean;
+  errorMessage?: string;
+  data?: historyBidsType[];
+}> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from('bids')
+    .select(
+      'amount, auction_id, auctions!inner (title, image_url, current_price, deadline, status, winner_id)',
+    )
+    .eq('bidder_id', userId)
+    .eq('auctions.status', 'closed')
+    .order('created_at', { ascending: false });
+
+  if (error) return { success: false, errorMessage: 'Something went wrong!' };
+
+  const uniqueIds: Set<string> = new Set();
+  const uniqueBids: historyBidsType[] = [];
+  data.forEach((row) => {
+    if (!uniqueIds.has(row.auction_id)) {
+      // winner_id stays server-side; expose only the derived `won` boolean
+      const { winner_id, ...auctions } = row.auctions;
+      uniqueBids.push({
+        auction_id: row.auction_id,
+        amount: row.amount,
+        won: winner_id === userId,
+        auctions,
+      });
+      uniqueIds.add(row.auction_id);
+    }
+  });
+  return { success: true, data: uniqueBids };
 }
 
 export async function getWachlist(userId: string): Promise<{
