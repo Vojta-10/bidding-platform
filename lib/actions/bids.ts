@@ -1,6 +1,5 @@
 'use server';
 
-import { Json } from '@/types/database';
 import { createClient } from '../supabase/server';
 
 type placeBidType = {
@@ -17,47 +16,38 @@ export async function placeBid({
   bidderId,
   bidAmount,
   auction,
-}: placeBidType): Promise<
-  { error: string } | { success: boolean; data: Json }
-> {
+}: placeBidType): Promise<{ error: string } | { success: true }> {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) return { success: false, error: 'Authentication failed' };
+  if (!user) return { error: 'Authentication failed' };
 
   if (user.id !== bidderId)
-    return { success: false, error: 'There was an error placing bid' };
+    return { error: 'There was an error placing bid' };
 
   if (auction.sellerId === user.id)
-    return {
-      success: false,
-      error: 'You own the auction you can not place bid on it',
-    };
+    return { error: 'You own the auction you can not place bid on it' };
 
-  const { data: currentLeader } = await supabase
-    .from('bids')
-    .select('bidder_id')
-    .eq('auction_id', auction.id)
-    .limit(1)
-    .single();
-
-  console.log(currentLeader, 'ahoj');
-
-  if (currentLeader?.bidder_id === user.id)
-    return { error: 'You are already leading this auction' };
-  const p_auction_id = auction.id;
-  const p_bidder_id = user.id;
-  const p_amount = bidAmount;
-
+  // All authoritative validation (status, deadline, amount, self-outbid)
+  // lives in the place_bid RPC, which serializes concurrent bids via
+  // SELECT ... FOR UPDATE. Don't pre-check the leader here: a plain
+  // limit(1) without an order() returns an arbitrary bid, not the leader,
+  // and any client-side check is racy anyway.
   const { data, error } = await supabase.rpc('place_bid', {
-    p_auction_id,
-    p_bidder_id,
-    p_amount,
+    p_auction_id: auction.id,
+    p_bidder_id: user.id,
+    p_amount: bidAmount,
   });
 
-  if (error)
-    return { success: false, error: 'There was an error placing your bid' };
-  return { success: true, data };
+  if (error) return { error: 'There was an error placing your bid' };
+
+  // The RPC reports business-rule failures in its JSON payload, not as a
+  // Postgres error — surface those instead of treating them as success.
+  const result = data as { success: boolean; error?: string } | null;
+  if (!result?.success)
+    return { error: result?.error ?? 'There was an error placing your bid' };
+
+  return { success: true };
 }
