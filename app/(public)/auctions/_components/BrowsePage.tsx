@@ -1,6 +1,6 @@
 import { AuctionCard } from './AuctionCard';
 import { FilterPanel } from './FilterPanel';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import {
   Sheet,
   SheetContent,
@@ -12,6 +12,7 @@ import { Search, SlidersHorizontal } from 'lucide-react';
 import { BrowseBids } from '@/lib/queries/auctions';
 import SortPanel from './SortPanel';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 export function BrowsePage({
   auctions,
@@ -100,7 +101,13 @@ export function BrowsePage({
               <p className='mt-1 text-xs text-muted-foreground max-w-[28ch]'>
                 Try adjusting your filters or clearing the search.
               </p>
-              <Link className='mt-4 text-xs' href={'/auctions'}>
+              <Link
+                className={cn(
+                  buttonVariants({ variant: 'secondary' }),
+                  'mt-4 text-xs tracking-wide',
+                )}
+                href={'/auctions'}
+              >
                 Clear all filters
               </Link>
             </div>

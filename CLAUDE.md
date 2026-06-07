@@ -83,7 +83,11 @@ Auctions are closed by the `close_expired_auctions()` Postgres function. It's in
 2. By `POST /api/auctions/close-expired` (requires `CRON_SECRET` header) — for Vercel Cron or manual trigger
 3. Defensively inside `place_bid` if the deadline has passed
 
-When `<CountdownTimer />` expires, call `router.refresh()` so the Server Component re-fetches and shows the closed state.
+When `<CountdownTimer />` expires, call `closeSpecificAuction(auctionId)` first, then `router.refresh()`. Do not use `close_expired_auctions()` here — clock skew means the browser fires slightly before Postgres `now()` catches up, so the RPC updates zero rows.
+
+### Closing a specific auction — use `closeSpecificAuction`, not the RPC
+
+`closeSpecificAuction(auctionId)` in `lib/actions/closeAuction.ts` uses the service role key (bypasses RLS), queries the top bid with `.maybeSingle()` (handles zero-bid case), then directly sets `status = 'closed'` and `winner_id`. Use this wherever you need to close one auction immediately (e.g. on timer expiry). The `close_expired_auctions()` RPC is for the pg_cron sweep only.
 
 ## Tailwind CSS v4
 
@@ -108,4 +112,4 @@ Style is `base-nova` (set in `components.json`). Components are in `components/u
 
 ## Database
 
-Schema is managed via the Supabase dashboard SQL editor (no local CLI or migration files). Tables: `profiles`, `auctions`, `bids`. RLS is enabled on all tables. The `profiles` row is auto-created by the `handle_new_user` trigger on `auth.users` insert — never create profiles manually.
+Schema is managed via the Supabase dashboard SQL editor (no local CLI or migration files). Tables: `profiles`, `auctions`, `bids`, `watchlist`, `notifications`. RLS is enabled on all tables. The `profiles` row is auto-created by the `handle_new_user` trigger on `auth.users` insert — never create profiles manually.
