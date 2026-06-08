@@ -1,36 +1,86 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Bidding Platform
+
+A full-stack real-time auction platform where users create timed listings, place competing bids, and the highest bidder at the deadline wins.
+
+## Features
+
+- **Browse auctions** — filterable, sortable listing grid with category and status filters
+- **Auction detail page** — live countdown timer, real-time current price and bid history via Supabase Realtime
+- **Bid placement** — concurrent bids handled safely with a Postgres `SELECT ... FOR UPDATE` lock via the `place_bid` RPC
+- **Create listings** — image upload, description, starting price, and deadline
+- **Watchlist** — save auctions to follow without bidding
+- **Dashboard** — personal stats (auctions won, total spent, active bids), watchlist, recent activity, and a collapsible listings summary
+- **My Bids page** — active and historical bids with status badges
+- **My Listings page** — manage your own auctions with inline editing and status filters
+- **Auth** — email/password sign-up and sign-in via Supabase Auth
+- **Automatic auction closing** — pg_cron sweeps every minute; browser timer calls a specific-close action on expiry to handle clock skew
+
+## Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 16 (App Router) |
+| Styling | Tailwind CSS v4 |
+| Components | shadcn/ui v4 (`base-nova` style) |
+| Icons | Lucide React |
+| Backend / DB | Supabase (Postgres + Auth + Realtime + Storage) |
+| Language | TypeScript |
+| Deployment | Vercel |
 
 ## Getting Started
 
-First, run the development server:
+### 1. Clone and install
+
+```bash
+git clone <repo-url>
+cd bidding-platform
+npm install
+```
+
+### 2. Set up environment variables
+
+Create a `.env.local` file in the root:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+CRON_SECRET=your_secret_for_cron_endpoint
+```
+
+### 3. Run the dev server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Other Commands
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build      # production build
+npm run lint       # ESLint
+npx tsc --noEmit   # type-check without building
+```
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+app/
+  (public)/          # Landing page, auction browse, auction detail, new listing
+  (auth)/            # Sign-in and sign-up pages
+  dashboard/         # Protected dashboard, bids, and listings management
+  api/               # Route handlers (e.g. /api/auctions/close-expired)
+lib/
+  actions/           # Server Functions (mutations)
+  queries/           # Server-only data fetching
+  supabase/          # Supabase client instances (browser, server, proxy)
+components/
+  ui/                # shadcn/ui primitives
+  shared/            # Shared app components
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Database
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Schema is managed via the Supabase dashboard SQL editor. Core tables: `profiles`, `auctions`, `bids`, `watchlist`, `notifications`. RLS is enabled on all tables.
