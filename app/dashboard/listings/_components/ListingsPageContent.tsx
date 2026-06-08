@@ -1,6 +1,6 @@
 'use client';
 
-import { Fragment, useState } from 'react';
+import { Fragment, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Gavel } from 'lucide-react';
 import { Search } from 'lucide-react';
@@ -84,10 +84,15 @@ export function ListingsPageContent({
     setPage(1);
   }
 
-  const activeCount = listings.filter((l) => l.status === 'active').length;
-  const closedCount = listings.filter((l) => l.status === 'closed').length;
-  const hasBidsCount = listings.filter((l) => l.bid_count > 0).length;
-  const noBidsCount = listings.filter((l) => l.bid_count === 0).length;
+  const { activeCount, closedCount, hasBidsCount, noBidsCount } = useMemo(
+    () => ({
+      activeCount: listings.filter((l) => l.status === 'active').length,
+      closedCount: listings.filter((l) => l.status === 'closed').length,
+      hasBidsCount: listings.filter((l) => l.bid_count > 0).length,
+      noBidsCount: listings.filter((l) => l.bid_count === 0).length,
+    }),
+    [listings],
+  );
 
   const statusChips: {
     id: StatusFilter;
