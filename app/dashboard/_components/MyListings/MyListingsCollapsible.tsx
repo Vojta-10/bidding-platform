@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import {
   Collapsible,
@@ -50,6 +51,13 @@ export default function MyListingsCollapsible({
                   {activeCount} active
                 </span>
               )}
+              <Link
+                href='/dashboard/listings'
+                onClick={(e) => e.stopPropagation()}
+                className='text-xs font-medium text-primary hover:underline'
+              >
+                View all →
+              </Link>
             </div>
             <ChevronDown className='size-4 text-muted-foreground transition-transform duration-200 group-data-open:rotate-180' />
           </CollapsibleTrigger>
