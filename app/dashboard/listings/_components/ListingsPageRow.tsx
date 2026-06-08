@@ -6,6 +6,7 @@ import { useCountdown } from '@/lib/hooks/useCountdown';
 import { closeSpecificAuction } from '@/lib/actions/closeAuction';
 import { ExternalLink, Gavel, Lock, Pencil } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
   ListingStatus,
@@ -19,8 +20,10 @@ interface ListingsPageRowProps {
 }
 
 export function ListingsPageRow({ listing, onEdit }: ListingsPageRowProps) {
+  const router = useRouter();
   const timeLeft = useCountdown(listing.deadline, false, async () => {
     await closeSpecificAuction(listing.id);
+    router.refresh();
   });
 
   const { label, dot, pill } =

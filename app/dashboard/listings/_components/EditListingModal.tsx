@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -136,11 +137,14 @@ export function EditListingModal({
             <Field>
               <FieldLabel htmlFor='edit-image'>Image</FieldLabel>
               {listing.image_url && (
-                <img
-                  src={listing.image_url}
-                  alt='Current listing image'
-                  className='mb-2 h-24 w-full rounded-md object-cover'
-                />
+                <div className='relative mb-2 h-24 w-full overflow-hidden rounded-md'>
+                  <Image
+                    src={listing.image_url}
+                    alt='Current listing image'
+                    fill
+                    className='object-cover'
+                  />
+                </div>
               )}
               <Input
                 id='edit-image'
