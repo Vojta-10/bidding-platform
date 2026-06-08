@@ -72,7 +72,7 @@ Any filter change resets pagination to page 1.
 ### Sortable columns
 Columns: **Title**, **Status**, **Current Price**, **Bids**, **Deadline**
 
-Sort state: `{ column: SortColumn | null, direction: 'asc' | 'desc' }`.  
+Sort state: `{ column: SortColumn | null, direction: 'asc' | 'desc' }` where `SortColumn = 'title' | 'status' | 'current_price' | 'bid_count' | 'deadline'`.  
 - First click on a column → sort ascending  
 - Second click → flip to descending  
 - Active column shows a `↑` or `↓` icon; inactive columns show a neutral `↕` icon on hover  
@@ -104,7 +104,7 @@ Image behavior: file input to replace the current image. Removing without replac
 
 ### Submit flow
 1. `handleSubmit` via `useTransition` (button shows loading state)  
-2. If new image file: call `uploadFile` (same module-level function pattern from `NewAuctionForm`) → get new URL  
+2. If new image file: call `uploadFile` (same module-level function pattern from `NewAuctionForm`) → get new URL. On upload failure: show warning toast, proceed without updating `image_url`  
 3. Call `updateListing(id, { title, description, image_url? })` server action  
 4. On success: `router.refresh()`, close modal, success toast  
 5. On error: error toast, modal stays open  
