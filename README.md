@@ -2,6 +2,17 @@
 
 A full-stack real-time auction platform where users create timed listings, place competing bids, and the highest bidder at the deadline wins.
 
+<img width="1896" height="910" alt="Bidding Platform" src="https://github.com/user-attachments/assets/cfb9cba3-f357-4d48-8cf9-3d2da032b418" />
+
+<img width="1895" height="898" alt="image" src="https://github.com/user-attachments/assets/faad91b1-dc14-4365-bcdb-1d06e680ee86" />
+
+<img width="1900" height="910" alt="image" src="https://github.com/user-attachments/assets/76ac144f-08f4-4615-989d-da20f1482c96" />
+
+<img width="1895" height="902" alt="image" src="https://github.com/user-attachments/assets/4179fcb3-0f27-43b5-b6f5-4c43e2230b40" />
+
+<img width="1895" height="901" alt="image" src="https://github.com/user-attachments/assets/f4670bad-8b7b-4227-aa0e-a4f1fe7b470f" />
+
+
 ## Features
 
 - **Browse auctions** — filterable, sortable listing grid with category and status filters
