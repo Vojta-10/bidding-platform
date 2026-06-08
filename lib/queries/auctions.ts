@@ -26,6 +26,8 @@ export type BrowseBids = {
 export type MyListingsType = {
   id: string;
   title: string;
+  description: string;
+  image_url: string | null;
   current_price: number;
   deadline: string;
   status: string;
@@ -253,7 +255,7 @@ export async function getMyListings(userId: string): Promise<{
 
   const { data, error } = await supabase
     .from('auctions')
-    .select('id, title, current_price, deadline, status, bid_count')
+    .select('id, title, description, image_url, current_price, deadline, status, bid_count')
     .eq('seller_id', userId)
     .order('status')
     .order('deadline', { ascending: true });

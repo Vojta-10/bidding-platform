@@ -16,3 +16,16 @@ export const newAuctionSchema = z.object({
 });
 
 export type newAuctionValues = z.infer<typeof newAuctionSchema>;
+
+export const listingEditSchema = z.object({
+  title: z
+    .string()
+    .max(90, "Title can't be longer than 90 characters!")
+    .nonempty('Title cannot be empty!'),
+  description: z
+    .string()
+    .max(200, 'Description is way too long!')
+    .min(10, 'Description must be atleast 10 characters long!'),
+});
+
+export type listingEditValues = z.infer<typeof listingEditSchema>;
