@@ -1,17 +1,24 @@
 import { cn } from '@/lib/utils';
+import { HomeStats } from '@/lib/queries/auctions';
 
-const stats = [
-  { value: '1,240', label: 'Live Auctions' },
-  { value: '$2.4M', label: 'Total Value Traded' },
-  { value: '8,500', label: 'Registered Members' },
-  { value: '94%', label: 'Satisfaction Rate' },
-];
+function formatCompact(n: number): string {
+  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000) return `$${(n / 1_000).toFixed(0)}K`;
+  return `$${n}`;
+}
 
-export function StatsStrip() {
+export function StatsStrip({ stats }: { stats: HomeStats }) {
+  const items = [
+    { value: stats.liveAuctions.toLocaleString(), label: 'Live Auctions' },
+    { value: formatCompact(stats.totalValueTraded), label: 'Total Value Traded' },
+    { value: stats.registeredMembers.toLocaleString(), label: 'Registered Members' },
+    { value: '94%', label: 'Satisfaction Rate' },
+  ];
+
   return (
     <section className='border border-border bg-muted/30'>
       <div className='max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4'>
-        {stats.map((stat, i) => (
+        {items.map((stat, i) => (
           <div
             key={stat.label}
             className={cn(
@@ -24,9 +31,7 @@ export function StatsStrip() {
             <span className='font-heading text-[2rem] leading-none font-bold text-primary'>
               {stat.value}
             </span>
-            <span className='text-sm text-muted-foreground'>
-              {stat.label}
-            </span>
+            <span className='text-sm text-muted-foreground'>{stat.label}</span>
           </div>
         ))}
       </div>

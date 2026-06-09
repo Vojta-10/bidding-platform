@@ -263,6 +263,37 @@ export async function getMyListings(userId: string): Promise<{
   return { success: true, data };
 }
 
+export type HomeStats = {
+  liveAuctions: number;
+  totalValueTraded: number;
+  registeredMembers: number;
+};
+
+export async function getHomeStats(): Promise<HomeStats> {
+  const supabase = await createClient();
+  const [auctionsRes, membersRes, tradedRes] = await Promise.all([
+    supabase.from('auctions').select('id', { count: 'exact', head: true }).eq('status', 'active'),
+    supabase.from('profiles').select('id', { count: 'exact', head: true }),
+    supabase.from('auctions').select('current_price').eq('status', 'closed'),
+  ]);
+  return {
+    liveAuctions: auctionsRes.count ?? 0,
+    registeredMembers: membersRes.count ?? 0,
+    totalValueTraded: tradedRes.data?.reduce((sum, a) => sum + a.current_price, 0) ?? 0,
+  };
+}
+
+export async function getHotAuctions(): Promise<BrowseBids[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('auctions')
+    .select('id, image_url, current_price, deadline, status, bid_count, title, description')
+    .eq('status', 'active')
+    .order('bid_count', { ascending: false })
+    .limit(3);
+  return data ?? [];
+}
+
 export async function getAuctionsWon(userId: string): Promise<{
   success: boolean;
   errorMessage?: string;
@@ -278,7 +309,8 @@ export async function getAuctionsWon(userId: string): Promise<{
   const { data, error } = await supabase
     .from('auctions')
     .select('deadline, current_price')
-    .eq('winner_id', userId);
+    .eq('winner_id', userId)
+    .eq('status', 'closed');
 
   if (error) return { success: false, errorMessage: 'Something went wrong!' };
 

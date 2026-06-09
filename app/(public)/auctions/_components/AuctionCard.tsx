@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { buttonVariants } from '@/components/ui/button';
 import { cn, calcTimeLeft, formatCurrency } from '@/lib/utils';
 import { Clock, ImageIcon, TrendingUp } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { BrowseBids } from '@/lib/queries/auctions';
 
@@ -19,7 +20,17 @@ export function AuctionCard({ auction }: { auction: BrowseBids }) {
       )}
     >
       <div className='relative aspect-4/3 bg-muted flex items-center justify-center overflow-hidden'>
-        <ImageIcon className='size-10 text-muted-foreground/20' />
+        {auction.image_url ? (
+          <Image
+            src={auction.image_url}
+            alt={auction.title}
+            fill
+            className='object-cover'
+            sizes='(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'
+          />
+        ) : (
+          <ImageIcon className='size-10 text-muted-foreground/20' />
+        )}
 
         <div
           className={cn(
