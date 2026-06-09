@@ -42,6 +42,7 @@ next-env.d.ts
 
 # claude code & AI tooling
 .claude/
+.playwright-mcp/
 CLAUDE.md
 GEMINI.md
 PROMPTS.md
