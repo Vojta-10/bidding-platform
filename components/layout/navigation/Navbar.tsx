@@ -3,12 +3,24 @@ import Link from 'next/link';
 import { Search } from 'lucide-react';
 import { NavbarActions } from './NavbarActions';
 import { NavbarMobile } from './NavbarMobile';
+import { getNotifications } from '@/lib/queries/notifications';
+import ErrorToast from '@/app/(public)/auctions/_components/ErrorToast';
 
 export default async function Navbar() {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  const {
+    success,
+    data: notifications,
+    errorMessage: err,
+  } = await getNotifications();
+
+  if (!success) {
+    return <ErrorToast failed={err || ''}></ErrorToast>;
+  }
 
   let profile = null;
   if (user) {
@@ -64,7 +76,11 @@ export default async function Navbar() {
         </form>
 
         <div className='ml-auto shrink-0'>
-          <NavbarActions user={user} profile={profile} />
+          <NavbarActions
+            user={user}
+            profile={profile}
+            notifications={notifications || []}
+          />
         </div>
       </div>
     </header>

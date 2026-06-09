@@ -8,13 +8,19 @@ import { NotificationPanel } from './NotificationPanel';
 import { UserMenu } from './UserMenu';
 import type { User } from '@supabase/supabase-js';
 import type { Profile } from '@/types/database';
+import { notificationsType } from '@/lib/queries/notifications';
 
 interface NavbarActionsProps {
   user: User | null;
   profile: Profile | null;
+  notifications: notificationsType[];
 }
 
-export function NavbarActions({ user, profile }: NavbarActionsProps) {
+export function NavbarActions({
+  user,
+  profile,
+  notifications,
+}: NavbarActionsProps) {
   if (!user) {
     return (
       <div className='flex items-center gap-2'>
@@ -42,7 +48,10 @@ export function NavbarActions({ user, profile }: NavbarActionsProps) {
 
   return (
     <div className='flex items-center gap-4'>
-      <NotificationPanel />
+      <NotificationPanel
+        initialNotifications={notifications}
+        userId={user.id}
+      />
       <Link
         href='/auctions/new'
         className={cn(

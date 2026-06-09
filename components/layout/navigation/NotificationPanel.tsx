@@ -1,65 +1,79 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Bell, Gavel, Trophy, Tag } from 'lucide-react';
+import { Bell, Gavel, Trophy, Tag, Hourglass } from 'lucide-react';
 import {
   Popover,
   PopoverTrigger,
   PopoverContent,
 } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
-
-// Replace with real data fetched from DB when notifications table exists
-const MOCK_NOTIFICATIONS = [
-  {
-    id: '1',
-    type: 'outbid' as const,
-    title: "You've been outbid",
-    description: 'Someone placed a higher bid on MacBook Pro M3',
-    time: '2 min ago',
-    read: false,
-    href: '/auctions/123',
-  },
-  {
-    id: '2',
-    type: 'won' as const,
-    title: 'Auction won!',
-    description: 'You won the bid on Vintage Rolex Submariner',
-    time: '1 hour ago',
-    read: false,
-    href: '/auctions/456',
-  },
-  {
-    id: '3',
-    type: 'bid' as const,
-    title: 'New bid on your listing',
-    description: 'Someone bid $340 on your Sony A7 IV listing',
-    time: '3 hours ago',
-    read: true,
-    href: '/auctions/789',
-  },
-];
+import { notificationsType } from '@/lib/queries/notifications';
+import { markReadDB } from '@/lib/actions/notifications';
+import { createClient } from '@/lib/supabase/client';
 
 const notificationConfig = {
-  outbid: { dot: 'bg-destructive', Icon: Gavel, iconClass: 'text-destructive' },
-  won: { dot: 'bg-green-500', Icon: Trophy, iconClass: 'text-green-600' },
-  bid: { dot: 'bg-primary', Icon: Tag, iconClass: 'text-primary' },
+  auction_outbid: {
+    dot: 'bg-destructive',
+    Icon: Gavel,
+    iconClass: 'text-destructive',
+  },
+  auction_won: {
+    dot: 'bg-green-500',
+    Icon: Trophy,
+    iconClass: 'text-green-600',
+  },
+  listing_new_bid: { dot: 'bg-primary', Icon: Tag, iconClass: 'text-primary' },
+  listing_ended: {
+    dot: 'bg-blue-500',
+    Icon: Hourglass,
+    iconClass: 'text-blue-600',
+  },
 };
 
-export function NotificationPanel() {
-  const [notifications, setNotifications] = useState(MOCK_NOTIFICATIONS);
+export function NotificationPanel({
+  initialNotifications,
+  userId,
+}: {
+  initialNotifications: notificationsType[];
+  userId: string;
+}) {
+  const supabase = createClient();
+  const [notifications, setNotifications] =
+    useState<notificationsType[]>(initialNotifications);
 
-  const unreadCount = notifications.filter((n) => !n.read).length;
+  const unreadCount = notifications.length;
 
-  function markAllRead() {
-    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+  useEffect(() => {
+    const channel = supabase
+      .channel(`notifications-${userId}-${Math.random()}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'notifications',
+          filter: `user_id=eq.${userId}`,
+        },
+        (payload) => {
+          setNotifications((prev) => [payload.new as notificationsType, ...prev]);
+        },
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [userId]);
+
+  async function markAllRead() {
+    setNotifications([]);
+    const { success, errorMessage } = await markReadDB({ userId });
   }
 
-  function markRead(id: string) {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, read: true } : n)),
-    );
+  async function markRead(id: string) {
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
+    const { success, errorMessage } = await markReadDB({ userId, id });
   }
 
   return (
@@ -74,11 +88,7 @@ export function NotificationPanel() {
         )}
       </PopoverTrigger>
 
-      <PopoverContent
-        align='end'
-        sideOffset={8}
-        className='w-80 p-0 gap-0'
-      >
+      <PopoverContent align='end' sideOffset={8} className='w-80 p-0 gap-0'>
         <div className='flex items-center justify-between px-4 py-3 border-b'>
           <span className='text-sm font-semibold'>Notifications</span>
           {unreadCount > 0 && (
@@ -119,14 +129,19 @@ export function NotificationPanel() {
                         {n.title}
                       </p>
                       {!n.read && (
-                        <span className={cn('mt-1.5 size-1.5 shrink-0 rounded-full', dot)} />
+                        <span
+                          className={cn(
+                            'mt-1.5 size-1.5 shrink-0 rounded-full',
+                            dot,
+                          )}
+                        />
                       )}
                     </div>
                     <p className='text-xs text-muted-foreground mt-0.5 line-clamp-2'>
                       {n.description}
                     </p>
                     <p className='text-xs text-muted-foreground/70 mt-1'>
-                      {n.time}
+                      {n.created_at}
                     </p>
                   </div>
                 </Link>
